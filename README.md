@@ -50,7 +50,3 @@ for the warnings.
 ### Notes
 
 Both these scripts could be run as one. Though while messing around it made more sense to do the install once and then re-pack as many times as necessary.
-
-Other improvements would be to also tidy up prior to the
-install so repeated runs of that script would clean out
-any existing Node-RED files.

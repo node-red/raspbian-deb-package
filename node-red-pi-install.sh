@@ -16,13 +16,16 @@
 
 # can remove next line if already updated....
 sudo apt-get update
-sudo apt-get install nodejs nodejs-legacy npm linitian -y
+sudo apt-get install nodejs nodejs-legacy npm lintian -y
 echo " "
 echo "Installed"
 echo "   Node" $(node -v)
 echo "   Npm   "$(npm -v)
 echo "Now installing Node-RED - please wait - can take 10 mins on a Pi 1"
 echo " "
+sudo rm -rf /usr/local/lib/node_modules/node-red*
+sudo rm -rf /usr/local/bin/node*
+sudo rm -rf /home/pi/.npm /hom/pi/.node-gyp
 sudo npm install -g --unsafe-perm node-red
 
 # Remove a load of unnecessary doc/test/example from pre-reqs

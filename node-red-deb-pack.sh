@@ -78,7 +78,7 @@ echo "Move from /usr/local/... to /usr/..."
 sudo mv usr/local/* usr/
 sudo rm -rf usr/local
 
-echo "Reset file owenerships and permissions"
+echo "Reset file ownerships and permissions"
 sudo chown -R root:root *
 sudo chmod -R -s *
 sudo find . -type f -iname "*.js" -exec chmod 644 {} \;
