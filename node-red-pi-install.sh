@@ -82,13 +82,9 @@ if [ -d "resources" ]; then
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
     cd ..
 else
-    sudo wget http://nodered.org/resources/nodered.service -O /lib/systemd/system/nodered.service
-    sudo wget http://nodered.org/resources/node-red-start -O /usr/local/bin/node-red-start
-    sudo wget http://nodered.org/resources/node-red-stop -O /usr/local/bin/node-red-stop
-    sudo wget http://nodered.org/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-    sudo wget http://nodered.org/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
-    sudo chmod +x /usr/local/bin/node-red-start
-    sudo chmod +x /usr/local/bin/node-red-stop
+    echo " "
+    echo "resources   subdirectory not in place... exiting."
+    exit 1
 fi
 #sudo systemctl disable nodered
 
