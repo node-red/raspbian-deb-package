@@ -1,16 +1,16 @@
 # raspbian-deb-package
 Scripts required to build the Node-RED deb package for Raspbian.
 
-The easiest way to build the package is to run these two script files on a clean
-SD card running in a Raspberry Pi Arm6 model - that way they will include the
+**WARNING**: If you already have Node-RED installed **do not** run this *just for fun*. It will probably break your existing install.
+
+Only run it on a clean Raspbian Jessie SD card running in a Raspberry Pi Arm6 model - that way it will include the
 correct instruction set for other Arm6 type Pi (Original A and B models) and yet
 be forwards compatible with the Arm7 versions (Pi2 etc).
 
 Transfer all the files from this project to the Pi.
 
-    mkdir nrpack
-    cd nrpack
     wget -qO- -O nrpack.zip https://github.com/node-red/raspbian-deb-package/archive/master.zip && unzip nrpack.zip && rm nrpack.zip
+    cd raspbian-deb-package-master
 
 Then run the two scripts below
 
@@ -39,9 +39,9 @@ all the files and unpacks them into a directory in `/tmp/`
 
 It then moves files from `/usr/local/...` to `/usr/...`  as required for pre-installed applications, and adds the necessary `DEBIAN/control` file.
 
-Finally it builds the actual deb file - moves it back to the `/home/pi` directory and then runs `linitian` to report all the violations.
+Finally it builds the actual deb file - moves it back to the `/home/pi` directory and then runs `lintian` to report all the violations.
 
-Don't worry there are loads ! so to trim then down to what I consider actually relevant try running
+Don't worry - there are loads ! so to trim then down to what I consider actually relevant try running
 
     cat lint.log | grep E: | grep -v '\.node'
 
