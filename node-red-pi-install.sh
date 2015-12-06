@@ -63,10 +63,10 @@ sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping no
 
 match='uiPort: 1880,'
 file='/usr/local/lib/node_modules/node-red/settings.js'
-insert='\n    editorTheme: { menu: { \"menu-item-help": {\n        label: \"Node-RED Pi Website\",\n        url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n    } } },\n\n'
+insert='\n    editorTheme: { menu: { \"menu-item-help": {\n        label: \"Node-RED Pi Website\",\n        url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n    } } },\n'
 sudo sed -i "s/$match/$match\n$insert/" $file
 echo "**** settings.js ****"
-head -n 35 /usr/local/lib/node_modules/node-red/settings.js
+head -n 32 /usr/local/lib/node_modules/node-red/settings.js
 echo "*********************"
 
 # Get systemd script - start and stop scripts - svg icon - and .desktop file into correct places.

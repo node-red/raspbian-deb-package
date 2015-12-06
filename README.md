@@ -34,12 +34,17 @@ menu - programming
 
 ### node-red-deb-pack.sh
 
+The deb package version number is set at the top of this script. Edit as necessary.
+For example
+
+    VER=0.12.2
+
 Next run this script - it also cleans up the crud just to be sure... then packs
 all the files and unpacks them into a directory in `/tmp/`
 
 It then moves files from `/usr/local/...` to `/usr/...`  as required for pre-installed applications, and adds the necessary `DEBIAN/control` file.
 
-Finally it builds the actual deb file - moves it back to the `/home/pi` directory and then runs `lintian` to report all the violations.
+Finally it builds the actual deb file - moves it back in to the `/home/pi` directory and then runs `lintian` to report all the violations.
 
 Don't worry - there are loads ! so to trim then down to what I consider actually relevant try running
 
@@ -50,6 +55,8 @@ for the Errors - and
     cat lint.log | grep W: | grep -v '!node' | grep -v 'extra' | grep -v "image" | grep -v "please" | grep -v "not-executable" | grep -v '\.node'
 
 for the warnings.
+
+Move or Copy the `nodered_x.y.z.deb` file as required.
 
 ### Notes
 
