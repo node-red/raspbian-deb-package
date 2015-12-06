@@ -64,7 +64,7 @@ echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
 #sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /home/pi/.node-red* /usr/share/applications/Node-RED.desktop /etc/init.d/nodered /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /usr/share/applications/Node-RED.desktop /etc/init.d/nodered /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nred.tgz
 echo " "

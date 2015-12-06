@@ -6,9 +6,13 @@ SD card running in a Raspberry Pi Arm6 model - that way they will include the
 correct instruction set for other Arm6 type Pi (Original A and B models) and yet
 be forwards compatible with the Arm7 versions (Pi2 etc).
 
-Both script files should be transferred to the pi home directory and set executable..
+Transfer all the files from this project to the Pi.
 
-    chmod +x node-red*.sh
+    mkdir nrpack
+    cd nrpack
+    wget -qO- -O nrpack.zip https://github.com/node-red/raspbian-deb-package/archive/master.zip && unzip nrpack.zip && rm nrpack.zip
+
+Then run the two scripts below
 
 ### node-red-pi-install.sh
 
@@ -23,7 +27,7 @@ It also installs the node-red-admin tool, and a few useful extra nodes.
 Then it removes a load of crud files from all the installed dependancies -
 such as test, doc, samples, examples and so on.
 
-Finally we fetch the icon file, init scripts, and desktop file and install them.
+Finally we install the icon file, init scripts, and desktop file.
 
 Once this finishes the Pi should be able to run Node-RED and have an icon under
 menu - programming
@@ -31,7 +35,7 @@ menu - programming
 ### node-red-deb-pack.sh
 
 Next run this script - it also cleans up the crud just to be sure... then packs
-all the files and unpacks them into a directory in /tmp/
+all the files and unpacks them into a directory in `/tmp/`
 
 It then moves files from `/usr/local/...` to `/usr/...`  as required for pre-installed applications, and adds the necessary `DEBIAN/control` file.
 

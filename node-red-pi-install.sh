@@ -24,8 +24,8 @@ echo "   Npm   "$(npm -v)
 echo "Now installing Node-RED - please wait - can take 10 mins on a Pi 1"
 echo " "
 sudo rm -rf /usr/local/lib/node_modules/node-red*
-sudo rm -rf /usr/local/bin/node*
-sudo rm -rf /home/pi/.npm /hom/pi/.node-gyp
+sudo rm -rf /usr/local/bin/node-red*
+sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo npm install -g --unsafe-perm node-red
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
@@ -66,18 +66,31 @@ file='/usr/local/lib/node_modules/node-red/settings.js'
 insert='\n    editorTheme: { menu: { \"menu-item-help": {\n        label: \"Node-RED Pi Website\",\n        url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n    } } },\n\n'
 sudo sed -i "s/$match/$match\n$insert/" $file
 echo "**** settings.js ****"
-head -n 30 /usr/local/lib/node_modules/node-red/settings.js
+head -n 35 /usr/local/lib/node_modules/node-red/settings.js
 echo "*********************"
 
-# Get init.d script - start script - svg icon - and .desktop file into correct places.
-sudo wget http://nodered.org/resources/nodered -O /etc/init.d/nodered
-sudo chmod +x /etc/init.d/nodered
-sudo wget http://nodered.org/resources/node-red-start -O /usr/local/bin/node-red-start
-sudo wget http://nodered.org/resources/node-red-stop -O /usr/local/bin/node-red-stop
-sudo chmod +x /usr/local/bin/node-red-start
-sudo chmod +x /usr/local/bin/node-red-stop
-sudo wget http://nodered.org/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-sudo wget http://nodered.org/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
+# Get systemd script - start and stop scripts - svg icon - and .desktop file into correct places.
+if [ -d "resources" ]; then
+    cd resources
+    sudo chown root:root *
+    sudo chmod +x node-red-st*
+    sudo cp nodered.service /lib/systemd/system/
+    sudo cp node-red-start /usr/local/bin/
+    sudo cp node-red-stop /usr/local/bin/
+    sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+    sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+    sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
+    cd ..
+else
+    sudo wget http://nodered.org/resources/nodered.service -O /lib/systemd/system/nodered.service
+    sudo wget http://nodered.org/resources/node-red-start -O /usr/local/bin/node-red-start
+    sudo wget http://nodered.org/resources/node-red-stop -O /usr/local/bin/node-red-stop
+    sudo wget http://nodered.org/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+    sudo wget http://nodered.org/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
+    sudo chmod +x /usr/local/bin/node-red-start
+    sudo chmod +x /usr/local/bin/node-red-stop
+fi
+#sudo systemctl disable nodered
 
 # Restart lxpanelctl so icon appears in menu - programming
 lxpanelctl restart
