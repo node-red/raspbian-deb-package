@@ -58,6 +58,9 @@ popd
 mkdir -p ~/.node-red
 sudo npm install -g node-red-admin
 echo "Node-RED installed - just adding a few extra nodes"
+if [ ! -d "/usr/local/lib/node_modules/node-red/node_modules/node-red-node-serialport" ]; then
+    sudo npm install -g node-red-node-serialport@0.0.5
+fi
 sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
 #npm install node-red-contrib-scx-ibmiotapp
 

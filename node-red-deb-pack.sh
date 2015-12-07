@@ -60,6 +60,24 @@ sudo find . -iname .gitmodules -type f -exec rm {} \;
 sudo find . -iname .gitattributes -type f -exec rm {} \;
 sudo find . -iname "*~" -type f -exec rm {} \;
 
+cd /usr/local/lib/node_modules/node-red-node-serialport/node_modules
+sudo find . -type d -name test -exec rm -r {} \;
+sudo find . -type d -name doc -exec rm -r {} \;
+sudo find . -type d -name example* -exec rm -r {} \;
+sudo find . -type d -name sample -exec rm -r {} \;
+sudo find . -type d -iname benchmark -exec rm -r {} \;
+sudo find . -type f -iname bench.gnu -exec rm -r {} \;
+sudo find . -name .npmignore -type f -exec rm {} \;
+sudo find . -name .travis.yml -type f -exec rm {} \;
+sudo find . -name .jshintrc -type f -exec rm {} \;
+sudo find . -iname README.md -type f -exec rm {} \;
+sudo find . -iname HISTORY.md -type f -exec rm {} \;
+sudo find . -iname CONTRIBUTING.md -type f -exec rm {} \;
+sudo find . -iname CHANGE*.md -type f -exec rm {} \;
+sudo find . -iname .gitmodules -type f -exec rm {} \;
+sudo find . -iname .gitattributes -type f -exec rm {} \;
+sudo find . -iname "*~" -type f -exec rm {} \;
+
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
