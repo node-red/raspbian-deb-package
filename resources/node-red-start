@@ -12,8 +12,9 @@ echo -e "Use   \033[0;36mnode-red-start\033[0m                           to star
 echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m    to autostart Node-RED at every boot"
 echo " "
 echo "To find more nodes - go to http://flows.nodered.org"
-echo "You may also need to install npm"
-echo "      sudo apt-get install npm"
+echo "You may also need to install and upgrade npm"
+echo "      \033[0;36sudo apt-get install npm\033[0m"
+echo "      \033[0;36sudo npm i -g npm\033[0m"
 echo " "
 sudo service nodered start
 sudo journalctl -f -u nodered -o cat
