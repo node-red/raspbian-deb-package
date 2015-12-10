@@ -16,20 +16,23 @@
 
 # can remove next line if already updated....
 sudo apt-get update
+sudo rm -rf /usr/local/lib/node_modules/
+sudo rm -rf /usr/local/bin/node-red*
+sudo rm -rf /usr/lib/node_modules/
+sudo rm -rf /usr/bin/node-red*
+sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo apt-get install nodejs nodejs-legacy npm lintian -y
+sudo npm install -g npm@2.x
 echo " "
 echo "Installed"
 echo "   Node" $(node -v)
 echo "   Npm   "$(npm -v)
 echo "Now installing Node-RED - please wait - can take 10 mins on a Pi 1"
 echo " "
-sudo rm -rf /usr/local/lib/node_modules/node-red*
-sudo rm -rf /usr/local/bin/node-red*
-sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo npm install -g --unsafe-perm node-red
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
-pushd /usr/local/lib/node_modules/node-red/node_modules
+pushd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -57,19 +60,16 @@ popd
 # Add some extra useful nodes
 mkdir -p ~/.node-red
 sudo npm install -g node-red-admin
-echo "Node-RED installed - just adding a few extra nodes"
-if [ ! -d "/usr/local/lib/node_modules/node-red/node_modules/node-red-node-serialport" ]; then
-    sudo npm install -g node-red-node-serialport@0.0.5
-fi
+echo "Node-RED installed. Adding a few extra nodes"
 sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
 #npm install node-red-contrib-scx-ibmiotapp
 
 match='uiPort: 1880,'
-file='/usr/local/lib/node_modules/node-red/settings.js'
+file='/usr/lib/node_modules/node-red/settings.js'
 insert='\n    editorTheme: { menu: { \"menu-item-help": {\n        label: \"Node-RED Pi Website\",\n        url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n    } } },\n'
 sudo sed -i "s/$match/$match\n$insert/" $file
 echo "**** settings.js ****"
-head -n 32 /usr/local/lib/node_modules/node-red/settings.js
+head -n 32 /usr/lib/node_modules/node-red/settings.js
 echo "*********************"
 
 # Get systemd script - start and stop scripts - svg icon - and .desktop file into correct places.
@@ -78,8 +78,8 @@ if [ -d "resources" ]; then
     sudo chown root:root *
     sudo chmod +x node-red-st*
     sudo cp nodered.service /lib/systemd/system/
-    sudo cp node-red-start /usr/local/bin/
-    sudo cp node-red-stop /usr/local/bin/
+    sudo cp node-red-start /usr/bin/
+    sudo cp node-red-stop /usr/bin/
     sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
@@ -97,5 +97,5 @@ echo " "
 echo "All done."
 echo "  You can now start Node-RED with the command node-red-start"
 echo "  or using the icon under Menu / Programming / Node-RED."
-echo "  Then point your browser to localhost:1880 or http://{{your_pi_ip-address}:1880"
+echo "  Then point your browser to http://127.0.0.1:1880 or http://{{your_pi_ip-address}:1880"
 echo " "

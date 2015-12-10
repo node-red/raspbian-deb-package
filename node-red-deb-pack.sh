@@ -16,7 +16,7 @@
 
 VER=0.12.2
 
-cd /usr/local/lib/node_modules/node-red/node_modules
+cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -40,27 +40,10 @@ sudo find . -iname "*~" -type f -exec rm {} \;
 
 # slightly more risky
 sudo find . -iname test* -exec rm -r {} \;
+sudo find . -type d -name node-pre-gyp* -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
-cd /usr/local/lib/node_modules/node-red-admin/node_modules
-sudo find . -type d -name test -exec rm -r {} \;
-sudo find . -type d -name doc -exec rm -r {} \;
-sudo find . -type d -name example* -exec rm -r {} \;
-sudo find . -type d -name sample -exec rm -r {} \;
-sudo find . -type d -iname benchmark -exec rm -r {} \;
-sudo find . -type f -iname bench.gnu -exec rm -r {} \;
-sudo find . -name .npmignore -type f -exec rm {} \;
-sudo find . -name .travis.yml -type f -exec rm {} \;
-sudo find . -name .jshintrc -type f -exec rm {} \;
-sudo find . -iname README.md -type f -exec rm {} \;
-sudo find . -iname HISTORY.md -type f -exec rm {} \;
-sudo find . -iname CONTRIBUTING.md -type f -exec rm {} \;
-sudo find . -iname CHANGE*.md -type f -exec rm {} \;
-sudo find . -iname .gitmodules -type f -exec rm {} \;
-sudo find . -iname .gitattributes -type f -exec rm {} \;
-sudo find . -iname "*~" -type f -exec rm {} \;
-
-cd /usr/local/lib/node_modules/node-red-node-serialport/node_modules
+cd /usr/lib/node_modules/node-red-admin/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -82,7 +65,8 @@ echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
 #sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /home/pi/.node-red* /usr/share/applications/Node-RED.desktop /etc/init.d/nodered /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+#sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nred.tgz /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nred.tgz
 echo " "
@@ -92,9 +76,9 @@ sudo mkdir -p /tmp/nodered_$VER/DEBIAN
 sudo tar zxf /tmp/nred.tgz -C /tmp/nodered_$VER
 cd /tmp/nodered_$VER
 
-echo "Move from /usr/local/... to /usr/..."
-sudo mv usr/local/* usr/
-sudo rm -rf usr/local
+#echo "Move from /usr/local/... to /usr/..."
+#sudo mv usr/local/* usr/
+#sudo rm -rf usr/local
 
 echo "Reset file ownerships and permissions"
 sudo chown -R root:root *
