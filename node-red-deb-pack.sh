@@ -40,7 +40,7 @@ sudo find . -iname "*~" -type f -exec rm {} \;
 
 # slightly more risky
 sudo find . -iname test* -exec rm -r {} \;
-sudo find . -type d -name node-pre-gyp* -exec rm -r {} \;
+#sudo find . -type d -name node-pre-gyp* -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
 cd /usr/lib/node_modules/node-red-admin/node_modules
@@ -93,6 +93,8 @@ sudo find . -iname *.png -exec chmod 644 {} \;
 sudo find . -iname *.txt -exec chmod 644 {} \;
 sudo find . -iname *.conf -exec chmod 644 {} \;
 sudo find . -type d -exec chmod 755 {} \;
+sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/css/*
+sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/fonts/*
 sudo chmod 755 usr/lib/node_modules/node-red/red.js
 sudo chmod 755 usr/lib/node_modules/node-red-admin/node-red-admin.js
 

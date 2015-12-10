@@ -16,8 +16,8 @@
 
 # can remove next line if already updated....
 sudo apt-get update
-sudo rm -rf /usr/local/lib/node_modules/
-sudo rm -rf /usr/local/bin/node-red*
+#sudo rm -rf /usr/local/lib/node_modules/
+#sudo rm -rf /usr/local/bin/node-red*
 sudo rm -rf /usr/lib/node_modules/
 sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
