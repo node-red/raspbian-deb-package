@@ -28,7 +28,7 @@ echo "Installed"
 echo "   Node" $(node -v)
 echo "   Npm   "$(npm -v)
 echo "Now installing Node-RED - please wait - can take 10 mins on a Pi 1"
-echo " "
+echo "   Node-RED "$(npm show node-red version)
 sudo npm install -g --unsafe-perm node-red
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
@@ -83,10 +83,11 @@ if [ -d "resources" ]; then
     sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
+    sudo chown pi:pi *
     cd ..
 else
     echo " "
-    echo "resources   subdirectory not in place... exiting."
+    echo "resources - subdirectory not in place... exiting."
     exit 1
 fi
 #sudo systemctl disable nodered

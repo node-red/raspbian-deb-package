@@ -6,6 +6,7 @@ if [ "$HOSTIP" = "" ]; then
 fi
 echo " "
 echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
+echo "On Pi Node-RED works better with the Iceweasel browser"
 echo " "
 echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
 echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
