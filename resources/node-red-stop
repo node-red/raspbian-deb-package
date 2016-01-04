@@ -4,7 +4,6 @@ echo " "
 echo "Stop Node-RED"
 echo " "
 echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
-echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
 echo " "
 sudo service nodered stop
 echo " "

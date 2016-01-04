@@ -10,13 +10,17 @@ echo "On Pi Node-RED works better with the Iceweasel browser"
 echo " "
 echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
 echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
+if [ -e "/bin/journalctl" ]; then
 echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
-echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
+else
+echo -e "Use   \033[0;36msudo update-rc.d nodered defaults\033[0m      to autostart Node-RED at every boot"
+fi
 echo " "
 echo "To find more nodes - go to http://flows.nodered.org"
-echo "You may also need to install and upgrade npm"
-echo -e "      \033[0;36msudo apt-get install npm\033[0m"
-echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
 echo " "
 sudo service nodered start
-sudo journalctl -f -u nodered -o cat
+if [ -e "/bin/journalctl" ]; then
+    sudo journalctl -f -u nodered -o cat
+else
+    sudo tail -f /var/log/node-red.log
+fi
