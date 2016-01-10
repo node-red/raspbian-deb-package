@@ -4,6 +4,7 @@ HOSTIP=`hostname -I | cut -d ' ' -f 1`
 if [ "$HOSTIP" = "" ]; then
     HOSTIP="127.0.0.1"
 fi
+echo -e "Start \033[1m\033[38;5;88mNode-RED\033[0m"
 echo " "
 echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
 echo "On Pi Node-RED works better with the Iceweasel browser"
@@ -13,10 +14,10 @@ echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start 
 echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
 echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
 echo " "
-echo "To find more nodes - go to http://flows.nodered.org"
+echo "To find more nodes and example flows - go to http://flows.nodered.org"
 echo "You may also need to install and upgrade npm"
 echo -e "      \033[0;36msudo apt-get install npm\033[0m"
 echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
-echo " "
 sudo service nodered start
+echo " "
 sudo journalctl -f -u nodered -o cat

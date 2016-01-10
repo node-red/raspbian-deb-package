@@ -21,8 +21,11 @@ sudo apt-get update
 sudo rm -rf /usr/lib/node_modules/
 sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
+sudo rm -rf /root/.npm /root/.node-gyp
 sudo apt-get install nodejs nodejs-legacy npm lintian -y
 sudo npm install -g npm@2.x
+hash -r
+sudo npm cache clear
 echo " "
 echo "Installed"
 echo "   Node" $(node -v)
@@ -77,9 +80,11 @@ if [ -d "resources" ]; then
     cd resources
     sudo chown root:root *
     sudo chmod +x node-red-st*
+    sudo chmod -x update-nodejs-and-nodered
     sudo cp nodered.service /lib/systemd/system/
     sudo cp node-red-start /usr/bin/
     sudo cp node-red-stop /usr/bin/
+    sudo cp update-nodejs-and-nodered /usr/bin/
     sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.12.4
+VER=0.12.5
 
 cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -115,7 +115,9 @@ echo " A graphical flow editor for event based applications." | sudo tee -a cont
 echo " Runs on node.js - using a browser for the user interface." | sudo tee -a control
 echo " See http://nodered.org for more information, documentation and examples." | sudo tee -a control
 echo " ." | sudo tee -a control
-echo " Released under Apache v2 License by IBM Corp. 2015." | sudo tee -a control
+echo " Copyright 2015,2016 IBM Corp." | sudo tee -a control
+echo " Licensed under the Apache License, Version 2.0" | sudo tee -a control
+echo " http://www.apache.org/licenses/LICENSE-2.0" | sudo tee -a control
 
 echo "Build the actual deb file"
 cd /tmp/

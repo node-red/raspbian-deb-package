@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Copyright 2016 IBM Corp.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+echo " "
+echo "This script will remove the pre-installed versions of node.js and Node-RED"
+echo "and replace them with node.js 4.2 LTS and the latest Node-RED from Github."
+echo "To do this it runs commands as root - please satisfy yourself that this will"
+echo "not damage your Pi, or otherwise compromise your configuration."
+echo " "
+read -p "Are you really, really sure you want to do this ? " yn
+case $yn in
+    [Yy]* )
+        cd $HOME
+        sudo apt-get remove -y nodered nodejs nodejs-legacy npm
+        sudo apt-get autoremove -y
+        # grab the correct LTS bundle for the processor
+        echo " "
+        if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
+            echo "Installing node for Pi - Armv6"
+            f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv6l.tar.gz" | cut -d '"' -f 2)
+            wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
+        else
+            echo "Installing node for Pi2 - Armv7"
+            f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv7l.tar.gz" | cut -d '"' -f 2)
+            wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
+        fi
+        # unpack it into the correct places
+        sudo tar -zxf node.tgz --strip-components=1 -C /usr
+        # remove the tgz file to save space
+        rm node.tgz
+        echo "Installed"
+        echo "   Node" $(node -v)
+        echo "   Npm   "$(npm -v)
+        echo "Now installing Node-RED - please wait - can take 20 mins on a Pi 1"
+        echo " "
+        sudo npm cache clean
+        sudo npm install -g --unsafe-perm node-red
+        sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
+        # Now add the shortcut to the menu
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
+        lxpanelctl restart
+        # and add the start and stop scripts to systemd
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.service -O /lib/systemd/system/nodered.service
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
+        sudo chmod +x /usr/bin/node-red-st*
+        sudo systemctl daemon-reload
+        sudo setcap cap_net_raw=ep /bin/ping
+        sudo setcap cap_net_raw=ep /bin/ping6
+        echo " "
+        echo "All done."
+        echo -e "  You can now start Node-RED with the command  \033[0;36mnode-red-start\033[0m"
+        echo -e "  or using the icon under   Menu / Programming / Node-RED"
+        echo -e "  Then point your browser to \033[0;36mlocalhost:1880\033[0m or \033[0;36mhttp://{{your_pi_ip-address}:1880\033[0m"
+        echo " "
+    ;;
+        * ) exit
+    ;;
+esac
