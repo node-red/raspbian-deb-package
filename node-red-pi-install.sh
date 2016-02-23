@@ -23,16 +23,16 @@ sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo rm -rf /root/.npm /root/.node-gyp
 sudo apt-get install nodejs nodejs-legacy npm lintian -y
-sudo npm install -g npm@2.x
+sudo npm install -g --unsafe-perm npm
 hash -r
-sudo npm cache clear
+sudo npm cache clean
 echo " "
 echo "Installed"
 echo "   Node" $(node -v)
 echo "   Npm   "$(npm -v)
-echo "Now installing Node-RED - please wait - can take 10 mins on a Pi 1"
+echo "Now installing Node-RED - please wait - can take 25 mins on a Pi 1"
 echo "   Node-RED "$(npm show node-red version)
-sudo npm install -g --unsafe-perm node-red
+sudo npm i -g --unsafe-perm --no-progress node-red
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
 pushd /usr/lib/node_modules/node-red/node_modules
@@ -62,10 +62,10 @@ popd
 
 # Add some extra useful nodes
 mkdir -p ~/.node-red
-sudo npm install -g node-red-admin
+sudo npm install -g --unsafe-perm node-red-admin
 echo "Node-RED installed. Adding a few extra nodes"
-sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
-#npm install node-red-contrib-scx-ibmiotapp
+sudo npm install -g --unsafe-perm node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
+sudo npm install -g --unsafe-perm node-red-contrib-ibm-watson-iot
 
 match='uiPort: 1880,'
 file='/usr/lib/node_modules/node-red/settings.js'
@@ -98,7 +98,7 @@ fi
 #sudo systemctl disable nodered
 
 # Restart lxpanelctl so icon appears in menu - programming
-lxpanelctl restart
+#lxpanelctl restart
 echo " "
 echo "All done."
 echo "  You can now start Node-RED with the command node-red-start"

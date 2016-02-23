@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2015 IBM Corp.
+# Copyright 2015,2016 IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.13.0
+VER=0.13.2
 
 cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -24,19 +24,21 @@ sudo find . -type d -name sample -exec rm -r {} \;
 sudo find . -type d -iname benchmark* -exec rm -r {} \;
 sudo find . -type d -iname .nyc_output -exec rm -r {} \;
 sudo find . -type d -iname unpacked -exec rm -r {} \;
+sudo find . -type d -name man* -exec rm -r {} \;
+sudo find . -type d -name tst -exec rm -r {} \;
 
-sudo find . -name bench.gnu -type f -exec rm {} \;
-sudo find . -name .npmignore -type f -exec rm {} \;
-sudo find . -name .travis.yml -type f -exec rm {} \;
-sudo find . -name .jshintrc -type f -exec rm {} \;
-sudo find . -iname README.md -type f -exec rm {} \;
-sudo find . -iname HISTORY.md -type f -exec rm {} \;
-sudo find . -iname CONTRIBUTING.md -type f -exec rm {} \;
-sudo find . -iname CHANGE*.md -type f -exec rm {} \;
-sudo find . -iname .gitmodules -type f -exec rm {} \;
-sudo find . -iname .gitattributes -type f -exec rm {} \;
-sudo find . -iname .gitignore -type f -exec rm {} \;
-sudo find . -iname "*~" -type f -exec rm {} \;
+sudo find . -type f -name bench.gnu -exec rm {} \;
+sudo find . -type f -name .npmignore -exec rm {} \;
+sudo find . -type f -name .travis.yml -exec rm {} \;
+sudo find . -type f -name .jshintrc -exec rm {} \;
+sudo find . -type f -iname README.md -exec rm {} \;
+sudo find . -type f -iname HISTORY.md -exec rm {} \;
+sudo find . -type f -iname CONTRIBUTING.md -exec rm {} \;
+sudo find . -type f -iname CHANGE*.md -exec rm {} \;
+sudo find . -type f -iname .gitmodules -exec rm {} \;
+sudo find . -type f -iname .gitattributes -exec rm {} \;
+sudo find . -type f -iname .gitignore -exec rm {} \;
+sudo find . -type f -iname "*~" -exec rm {} \;
 
 # slightly more risky
 sudo find . -iname test* -exec rm -r {} \;
@@ -48,20 +50,21 @@ sudo find . -type d -name node-pre-gyp-github -exec rm -r {} \;
 cd /usr/lib/node_modules/node-red-admin/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
-sudo find . -type d -name example* -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;
+sudo find . -type d -iname coverage -exec rm -r {} \;
 sudo find . -type d -iname benchmark -exec rm -r {} \;
 sudo find . -type f -iname bench.gnu -exec rm -r {} \;
-sudo find . -name .npmignore -type f -exec rm {} \;
-sudo find . -name .travis.yml -type f -exec rm {} \;
-sudo find . -name .jshintrc -type f -exec rm {} \;
-sudo find . -iname README.md -type f -exec rm {} \;
-sudo find . -iname HISTORY.md -type f -exec rm {} \;
-sudo find . -iname CONTRIBUTING.md -type f -exec rm {} \;
-sudo find . -iname CHANGE*.md -type f -exec rm {} \;
-sudo find . -iname .gitmodules -type f -exec rm {} \;
-sudo find . -iname .gitattributes -type f -exec rm {} \;
-sudo find . -iname "*~" -type f -exec rm {} \;
+sudo find .         -name example* -exec rm -r {} \;
+sudo find . -type f -name .npmignore -exec rm {} \;
+sudo find . -type f -name .travis.yml -exec rm {} \;
+sudo find . -type f -name .jshintrc -exec rm {} \;
+sudo find . -type f -iname README.md -exec rm {} \;
+sudo find . -type f -iname HISTORY.md -exec rm {} \;
+sudo find . -type f -iname CONTRIBUTING.md -exec rm {} \;
+sudo find . -type f -iname CHANGE*.md -exec rm {} \;
+sudo find . -type f -iname .gitmodules -exec rm {} \;
+sudo find . -type f -iname .gitattributes -exec rm {} \;
+sudo find . -type f -iname "*~" -exec rm {} \;
 
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
@@ -94,6 +97,7 @@ sudo find . -iname Makefile -exec chmod 644 {} \;
 sudo find . -iname *.png -exec chmod 644 {} \;
 sudo find . -iname *.txt -exec chmod 644 {} \;
 sudo find . -iname *.conf -exec chmod 644 {} \;
+sudo find . -iname update_authors.sh -exec chmod 644 {} \;
 sudo find . -type d -exec chmod 755 {} \;
 sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/css/*
 sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/fonts/*

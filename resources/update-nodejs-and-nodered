@@ -43,10 +43,12 @@ case $yn in
         echo "Installed"
         echo "   Node" $(node -v)
         echo "   Npm   "$(npm -v)
+        # and install Node-RED
         echo "Now installing Node-RED - please wait - can take 20 mins on a Pi 1"
         echo " "
         sudo npm cache clean
-        sudo npm install -g --unsafe-perm node-red
+        sudo rm -rf /home/pi/.node-gyp
+        sudo npm install -g --unsafe-perm node-red node-red-admin
         sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
         # Now add the shortcut to the menu
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
@@ -56,7 +58,9 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.service -O /lib/systemd/system/nodered.service
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered
         sudo chmod +x /usr/bin/node-red-st*
+        sudo chmod +x /usr/bin/update-nodejs-and-nodered
         sudo systemctl daemon-reload
         sudo setcap cap_net_raw=ep /bin/ping
         sudo setcap cap_net_raw=ep /bin/ping6
