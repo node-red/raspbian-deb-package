@@ -23,8 +23,10 @@ read -p "Are you really, really sure you want to do this ? " yn
 case $yn in
     [Yy]* )
         cd $HOME
+        node-red-stop
         sudo apt-get remove -y nodered nodejs nodejs-legacy npm
         sudo apt-get autoremove -y
+        sudo rm -rf /usr/local/lib/node_modules/node-* /usr/local/bin/node-* /usr/local/bin/npm* /usr/local/bin/npm
         # grab the correct LTS bundle for the processor
         echo " "
         if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
@@ -48,8 +50,7 @@ case $yn in
         echo " "
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp
-        sudo npm install -g --unsafe-perm node-red node-red-admin
-        sudo npm install -g node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
+        sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot
         # Now add the shortcut to the menu
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
