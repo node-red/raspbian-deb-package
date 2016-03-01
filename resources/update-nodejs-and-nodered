@@ -51,6 +51,9 @@ case $yn in
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp
         sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot
+        pushd /home/pi/.node-red
+        npm rebuild
+        popd
         # Now add the shortcut to the menu
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
