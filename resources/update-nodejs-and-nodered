@@ -66,6 +66,7 @@ case $yn in
         sudo chmod +x /usr/bin/node-red-st*
         sudo chmod +x /usr/bin/update-nodejs-and-nodered
         sudo systemctl daemon-reload
+        sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
         sudo setcap cap_net_raw=ep /bin/ping
         sudo setcap cap_net_raw=ep /bin/ping6
         echo " "
