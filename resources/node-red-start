@@ -20,4 +20,4 @@ echo -e "      \033[0;36msudo apt-get install npm\033[0m"
 echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
 sudo service nodered start
 echo " "
-sudo journalctl -f -u nodered -o cat
+sudo journalctl -f -n 0 -u nodered -o cat

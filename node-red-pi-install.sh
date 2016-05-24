@@ -64,7 +64,7 @@ popd
 mkdir -p ~/.node-red
 sudo npm install -g --unsafe-perm node-red-admin
 echo "Node-RED installed. Adding a few extra nodes"
-sudo npm install -g --unsafe-perm node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
+sudo npm install -g --unsafe-perm node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
 sudo npm install -g --unsafe-perm node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
 # sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 

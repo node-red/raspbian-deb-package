@@ -15,7 +15,7 @@
 # limitations under the License.
 echo " "
 echo "This script will remove the pre-installed versions of node.js and Node-RED"
-echo "and replace them with node.js 4.2 LTS and the latest Node-RED from Github."
+echo "and replace them with node.js 4.x LTS (argon) and the latest Node-RED from Github."
 echo "To do this it runs commands as root - please satisfy yourself that this will"
 echo "not damage your Pi, or otherwise compromise your configuration."
 echo " "

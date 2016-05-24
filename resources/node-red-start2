@@ -22,7 +22,7 @@ echo "To find more nodes and example flows - go to http://flows.nodered.org"
 sudo service nodered start
 echo " "
 if [ -e "/bin/journalctl" ]; then
-    sudo journalctl -f -u nodered -o cat
+    sudo journalctl -f -n 0 -u nodered -o cat
 else
     sudo tail -f /var/log/node-red.log
 fi

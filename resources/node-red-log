@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -e '\033]2;'Node-RED log'\007'
+echo " "
+sudo journalctl -f -n 25 -u nodered -o cat
