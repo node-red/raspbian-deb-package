@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.13.4-1
+VER=0.14.3
 
 cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -97,6 +97,7 @@ sudo find . -iname Makefile -exec chmod 644 {} \;
 sudo find . -iname *.png -exec chmod 644 {} \;
 sudo find . -iname *.txt -exec chmod 644 {} \;
 sudo find . -iname *.conf -exec chmod 644 {} \;
+sudo find . -iname prepublish.sh -exec chmod 644 {} \;
 sudo find . -iname update_authors.sh -exec chmod 644 {} \;
 sudo find . -type d -exec chmod 755 {} \;
 sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/css/*

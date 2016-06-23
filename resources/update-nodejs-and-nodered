@@ -30,11 +30,11 @@ case $yn in
         # grab the correct LTS bundle for the processor
         echo " "
         if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
-            echo "Installing node for Pi - Armv6"
+            echo "Installing node for Armv6"
             f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv6l.tar.gz" | cut -d '"' -f 2)
             wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
         else
-            echo "Installing node for Pi2 - Armv7"
+            echo "Installing node for Armv7"
             f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv7l.tar.gz" | cut -d '"' -f 2)
             wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
         fi
@@ -50,7 +50,7 @@ case $yn in
         echo " "
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp
-        sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot
+        sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
         pushd /home/pi/.node-red
         npm rebuild
         popd
@@ -62,9 +62,9 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.service -O /lib/systemd/system/nodered.service
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
-        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log
         sudo chmod +x /usr/bin/node-red-st*
-        sudo chmod +x /usr/bin/update-nodejs-and-nodered
+        sudo chmod +x /usr/bin/node-red-log
         sudo systemctl daemon-reload
         sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
         sudo setcap cap_net_raw=ep /bin/ping
