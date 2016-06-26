@@ -15,9 +15,16 @@
 # limitations under the License.
 echo " "
 echo "This script will remove the pre-installed versions of node.js and Node-RED"
-echo "and replace them with node.js 4.x LTS (argon) and the latest Node-RED from Github."
+echo "and replace them with node.js 4.x LTS (argon) and the latest Node-RED from Npm."
 echo "To do this it runs commands as root - please satisfy yourself that this will"
 echo "not damage your Pi, or otherwise compromise your configuration."
+echo " "
+echo "Doing this may also be 'a bad thing' if you have installed lots of extra nodes."
+echo "Especially if they have any native binary component. Some nodes in your ~/.node-red"
+echo " directory will probably need to be re-installed afterwards, some may need you to"
+echo "run npm update, and some may require you to run npm rebuild."
+echo " "
+echo "There may be a period of frustration ahead to get back to where you were..."
 echo " "
 read -p "Are you really, really sure you want to do this ? " yn
 case $yn in
@@ -42,6 +49,7 @@ case $yn in
         sudo tar -zxf node.tgz --strip-components=1 -C /usr
         # remove the tgz file to save space
         rm node.tgz
+        hash -r
         echo "Installed"
         echo "   Node" $(node -v)
         echo "   Npm   "$(npm -v)
@@ -49,7 +57,7 @@ case $yn in
         echo "Now installing Node-RED - please wait - can take 20 mins on a Pi 1"
         echo " "
         sudo npm cache clean
-        sudo rm -rf /home/pi/.node-gyp
+        sudo rm -rf /home/pi/.node-gyp /home/pi/.npm
         sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
         pushd /home/pi/.node-red
         npm rebuild
