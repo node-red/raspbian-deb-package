@@ -32,8 +32,11 @@ case $yn in
         cd $HOME
         node-red-stop
         sudo apt-get remove -y nodered nodejs nodejs-legacy npm
+        sudo dpkg -r nodejs
+        sudo dpkg -r node
         sudo apt-get autoremove -y
-        sudo rm -rf /usr/local/lib/node_modules/node-* /usr/local/bin/node-* /usr/local/bin/npm* /usr/local/bin/npm
+        sudo rm -rf /usr/local/lib/node_modules/node-* /usr/local/bin/node-* /usr/local/bin/npm*
+        #sudo rm -rf /usr/lib/node_modules/node-* /usr/bin/node-* /usr/bin/npm*
         # grab the correct LTS bundle for the processor
         echo " "
         if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
@@ -59,6 +62,7 @@ case $yn in
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp /home/pi/.npm
         sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
+        # try to rebuild any already installed nodes
         pushd /home/pi/.node-red
         npm rebuild
         popd
@@ -71,8 +75,10 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered
         sudo chmod +x /usr/bin/node-red-st*
         sudo chmod +x /usr/bin/node-red-log
+        sudo chmod +x /usr/bin/update-nodejs-and-nodered
         sudo systemctl daemon-reload
         sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
         sudo setcap cap_net_raw=ep /bin/ping
