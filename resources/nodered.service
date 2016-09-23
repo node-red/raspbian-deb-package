@@ -13,7 +13,7 @@ Group=pi
 Nice=5
 Environment="NODE_OPTIONS=--max-old-space-size=128"
 #Environment="NODE_RED_OPTIONS=-v"
-#WorkingDirectory=/usr/lib/node_modules/node-red/
+WorkingDirectory=~/.node-red/
 #ExecStart=/usr/bin/env node $NODE_OPTIONS red.js $NODE_RED_OPTIONS
 ExecStart=/usr/bin/env node-red-pi $NODE_OPTIONS $NODE_RED_OPTIONS
 # Use SIGINT to stop

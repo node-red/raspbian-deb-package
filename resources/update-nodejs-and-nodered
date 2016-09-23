@@ -43,15 +43,16 @@ case $yn in
             echo "Installing node for Armv6"
             f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv6l.tar.gz" | cut -d '"' -f 2)
             wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
+            # unpack it into the correct places
+            sudo tar -zxf node.tgz --strip-components=1 -C /usr
+            # remove the tgz file to save space
+            rm node.tgz
         else
             echo "Installing node for Armv7"
-            f=$(wget https://nodejs.org/download/release/latest-argon/ -qO- | grep "armv7l.tar.gz" | cut -d '"' -f 2)
-            wget https://nodejs.org/download/release/latest-argon/$f -O node.tgz
+            # use the official script to install for Arm7
+            curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+            sudo apt-get install -y nodejs
         fi
-        # unpack it into the correct places
-        sudo tar -zxf node.tgz --strip-components=1 -C /usr
-        # remove the tgz file to save space
-        rm node.tgz
         hash -r
         echo "Installed"
         echo "   Node" $(node -v)
@@ -61,11 +62,14 @@ case $yn in
         echo " "
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp /home/pi/.npm
-        sudo npm install -g --unsafe-perm node-red node-red-admin node-red-node-rbe node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
+        sudo npm install -g --unsafe-perm node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
         # try to rebuild any already installed nodes
-        pushd /home/pi/.node-red
-        npm rebuild
-        popd
+        if [ -d "/home/pi/.node-red" ]
+        then
+            pushd /home/pi/.node-red
+            npm rebuild
+            popd
+        fi
         # Now add the shortcut to the menu
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop
