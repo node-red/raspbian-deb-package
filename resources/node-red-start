@@ -1,5 +1,15 @@
 #!/bin/bash
 echo -e '\033]2;'Node-RED console'\007'
+if [ "$nv" = "v0" ]; then
+    echo -e "\033[0;47m                                                  \033[0m"
+    echo -e "\033[0;47m    node.js v0.10 is NO LONGER supported.         \033[0m"
+    echo -e "\033[0;47m    please consider upgrading to node.js LTS.     \033[0m"
+    echo -e "\033[0;47m                                                  \033[0m"
+    echo -e "\033[0;47m    you can do this with the following command:   \033[0m"
+    echo -e "\033[0;47m        update-nodejs-and-nodered                 \033[0m"
+    echo -e "\033[0;47m                                                  \033[0m"
+    echo -e " "
+fi
 HOSTIP=`hostname -I | cut -d ' ' -f 1`
 if [ "$HOSTIP" = "" ]; then
     HOSTIP="127.0.0.1"
@@ -16,9 +26,11 @@ echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autost
 echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
 echo " "
 echo "To find more nodes and example flows - go to http://flows.nodered.org"
-echo "You may also need to install and upgrade npm"
-echo -e "      \033[0;36msudo apt-get install npm\033[0m"
-echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
+if [ "$nv" = "v0" ]; then
+    echo "You may also need to install and upgrade npm"
+    echo -e "      \033[0;36msudo apt-get install npm\033[0m"
+    echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
+fi
 sudo service nodered start
 echo " "
 sudo journalctl -f -n 0 -u nodered -o cat
