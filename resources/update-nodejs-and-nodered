@@ -62,7 +62,7 @@ case $yn in
         echo " "
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp /home/pi/.npm
-        sudo npm i -g --unsafe-perm node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
+        sudo npm i -g --unsafe-perm node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat node-red-contrib-play-audio
         sudo rm -rf /usr/lib/node_modules/node-red/node_modules/node-red-node-serialport
         sudo npm i -g --unsafe-perm node-red-node-serialport
         # try to rebuild any already installed nodes
@@ -82,6 +82,7 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi%20cpu%20temperature.json
         sudo chmod +x /usr/bin/node-red-st*
         sudo chmod +x /usr/bin/node-red-log
         sudo chmod +x /usr/bin/update-nodejs-and-nodered
