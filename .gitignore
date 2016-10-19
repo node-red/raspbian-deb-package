@@ -1,3 +1,9 @@
+*.deb
 lint.log
-n*.deb
 .DS_Store
+grab*
+packit*
+report
+resources/install-nodejs-and-nodered-wheezy
+runit*
+upgrade*

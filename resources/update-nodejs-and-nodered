@@ -62,7 +62,9 @@ case $yn in
         echo " "
         sudo npm cache clean
         sudo rm -rf /home/pi/.node-gyp /home/pi/.npm
-        sudo npm install -g --unsafe-perm node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
+        sudo npm i -g --unsafe-perm node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
+        sudo rm -rf /usr/lib/node_modules/node-red/node_modules/node-red-node-serialport
+        sudo npm i -g --unsafe-perm node-red-node-serialport
         # try to rebuild any already installed nodes
         if [ -d "/home/pi/.node-red" ]
         then

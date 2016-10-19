@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.14.6
+VER=0.15.1
 
 cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -47,7 +47,7 @@ sudo find . -type f -iname example.js -exec rm {} \;
 sudo find . -type d -name node-pre-gyp-github -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
-cd /usr/lib/node_modules/node-red-admin/node_modules
+cd /usr/lib/node_modules/node-red-node-serialport/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;

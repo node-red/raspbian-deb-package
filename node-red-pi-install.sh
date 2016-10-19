@@ -35,6 +35,9 @@ echo "Now installing Node-RED - please wait - can take 25 mins on a Pi 1"
 echo "   Node-RED "$(npm show node-red version)
 sudo npm i -g --unsafe-perm --no-progress node-red
 
+# Remove existing serialport
+sudo rm -rf /usr/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport
+
 # Remove a load of unnecessary doc/test/example from pre-reqs
 pushd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -65,7 +68,7 @@ popd
 mkdir -p ~/.node-red
 #sudo npm install -g --unsafe-perm --no-progress node-red-admin
 echo "Node-RED installed. Adding a few extra nodes"
-sudo npm install -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg
+sudo npm install -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-play-audio node-red-node-serialport
 sudo npm install -g --unsafe-perm --no-progress node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
 # sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 
@@ -92,6 +95,8 @@ if [ -d "resources" ]; then
     sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
+    sudo cp Pi\ cpu\ temperature.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
+    sudo cp cpu\ load.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
     sudo chown pi:pi *
     cd ..
 else
