@@ -29,7 +29,15 @@ echo " "
 read -p "Are you really, really sure you want to do this ? " yn
 case $yn in
     [Yy]* )
-        cd $HOME
+        # this script assumes that $HOME is the folder of the user that runs node-red
+        # that $USER is the user name and the group name to use when running is the 
+        # primary group of that user
+        # if this is not correct then edit the lines below
+        NODERED_HOME=$HOME
+        NODERED_USER=$USER
+        NODERED_GROUP=`id -gn`
+
+        cd "$NODERED_HOME"
         time1=$(date)
         node-red-stop
         sudo apt-get remove -y nodered nodejs nodejs-legacy npm
@@ -62,14 +70,14 @@ case $yn in
         echo "Now installing Node-RED - please wait - can take 25 mins on a Pi 1"
         echo " "
         sudo npm cache clean
-        sudo rm -rf /home/pi/.node-gyp /home/pi/.npm /root/.node-gyp /root/.npm
+        sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm
         sudo npm i -g --unsafe-perm --no-progress node-red node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat node-red-contrib-play-audio
         sudo rm -rf /usr/lib/node_modules/node-red/node_modules/node-red-node-serialport
         sudo npm i -g --unsafe-perm --no-progress node-red-node-serialport
         # try to rebuild any already installed nodes
-        if [ -d "/home/pi/.node-red" ]
+        if [ -d "$NODERED_HOME/.node-red" ]
         then
-            pushd /home/pi/.node-red
+            pushd "$NODERED_HOME/.node-red"
             npm rebuild
             popd
         fi
@@ -79,6 +87,8 @@ case $yn in
         lxpanelctl restart
         # and add the start and stop scripts to systemd
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.service -O /lib/systemd/system/nodered.service
+        # set the User Group and WorkingDirectory in nodered.service
+        sudo sed -i 's#^User=pi#User='$NODERED_USER'#;s#^Group=pi#Group='$NODERED_GROUP'#;s#^WorkingDirectory=/home/pi#WorkingDirectory='$NODERED_HOME'#;' /lib/systemd/system/nodered.service
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log
