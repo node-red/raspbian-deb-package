@@ -24,7 +24,7 @@ sudo rm -rf /usr/bin/update-nodejs-and-nodered
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo rm -rf /root/.npm /root/.node-gyp
 sudo apt-get install nodejs nodejs-legacy npm lintian -y
-sudo npm install -g --unsafe-perm npm
+sudo npm install -g --unsafe-perm npm@3.x
 hash -r
 sudo npm cache clean
 echo " "

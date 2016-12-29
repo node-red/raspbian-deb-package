@@ -30,7 +30,7 @@ read -p "Are you really, really sure you want to do this ? " yn
 case $yn in
     [Yy]* )
         # this script assumes that $HOME is the folder of the user that runs node-red
-        # that $USER is the user name and the group name to use when running is the 
+        # that $USER is the user name and the group name to use when running is the
         # primary group of that user
         # if this is not correct then edit the lines below
         NODERED_HOME=$HOME
@@ -92,7 +92,7 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop -O /usr/bin/node-red-stop
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log
-        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered
+        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered-6 -O /usr/bin/update-nodejs-and-nodered
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json
         sudo chmod +x /usr/bin/node-red-st*
         sudo chmod +x /usr/bin/node-red-log
