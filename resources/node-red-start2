@@ -1,29 +1,50 @@
 #!/bin/bash
 echo -e '\033]2;'Node-RED console'\007'
-HOSTIP=`hostname -I | cut -d ' ' -f 1`
-if [ "$HOSTIP" = "" ]; then
-    HOSTIP="127.0.0.1"
-fi
-echo -e "\033[1mStart \033[38;5;88mNode-RED\033[0m"
-echo " "
-echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
-echo "On Pi Node-RED works better with the Firefox browser"
-echo " "
-echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
-echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
-echo -e "Use   \033[0;36mnode-red-log\033[0m                           to view the recent log output"
-if [ -e "/bin/journalctl" ]; then
-echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
+if [[ $(which node-red) ]]; then
+    if [[ $(which node) ]]; then
+        nv=`node -v | cut -d "." -f1`
+        if [ "$nv" = "v0" ]; then
+            echo -e "\033[0;47m                                                  \033[0m"
+            echo -e "\033[0;47m    node.js v0.10 is NO LONGER supported.         \033[0m"
+            echo -e "\033[0;47m    please consider upgrading to node.js LTS.     \033[0m"
+            echo -e "\033[0;47m                                                  \033[0m"
+            echo -e "\033[0;47m    you can do this with the following command:   \033[0m"
+            echo -e "\033[0;47m        update-nodejs-and-nodered                 \033[0m"
+            echo -e "\033[0;47m                                                  \033[0m"
+            echo -e " "
+        fi
+        HOSTIP=`hostname -I | cut -d ' ' -f 1`
+        if [ "$HOSTIP" = "" ]; then
+            HOSTIP="127.0.0.1"
+        fi
+        echo -e "\033[1mStart \033[38;5;88mNode-RED\033[0m"
+        echo " "
+        echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
+        echo "On Pi Node-RED works better with the Firefox browser"
+        echo " "
+        echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
+        echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
+        echo -e "Use   \033[0;36mnode-red-log\033[0m                           to view the recent log output"
+        if [ -e "/bin/journalctl" ]; then
+        echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
+        else
+        echo -e "Use   \033[0;36msudo update-rc.d nodered defaults\033[0m      to autostart Node-RED at every boot"
+        fi
+        echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
+        echo " "
+        echo "To find more nodes and example flows - go to http://flows.nodered.org"
+        sudo service nodered start
+        echo " "
+        if [ -e "/bin/journalctl" ]; then
+            sudo journalctl -f -n 0 -u nodered -o cat
+        else
+            sudo tail -f /var/log/node-red.log
+        fi
+    else
+        echo "Node is not installed"
+        update-nodejs-and-nodered $USER
+    fi
 else
-echo -e "Use   \033[0;36msudo update-rc.d nodered defaults\033[0m      to autostart Node-RED at every boot"
-fi
-echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
-echo " "
-echo "To find more nodes and example flows - go to http://flows.nodered.org"
-sudo service nodered start
-echo " "
-if [ -e "/bin/journalctl" ]; then
-    sudo journalctl -f -n 0 -u nodered -o cat
-else
-    sudo tail -f /var/log/node-red.log
+    echo "Node-RED is not installed"
+    update-nodejs-and-nodered $USER
 fi

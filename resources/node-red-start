@@ -17,7 +17,7 @@ if [[ $(which node-red) ]]; then
         if [ "$HOSTIP" = "" ]; then
             HOSTIP="127.0.0.1"
         fi
-        echo -e "Start \033[1m\033[38;5;88mNode-RED\033[0m"
+        echo -e "\033[1mStart \033[38;5;88mNode-RED\033[0m"
         echo " "
         echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
         echo "On Pi Node-RED works better with the Firefox browser"
