@@ -3,9 +3,9 @@ Scripts required to build the Node-RED deb package for Raspbian.
 
 **WARNING**: If you already have Node-RED installed **do not** run this *just for fun*. It will probably break your existing install.
 
-Only run it on a clean Raspbian Jessie SD card running in a Raspberry Pi Arm6 model - that way it will include the
-correct instruction set for other Arm6 type Pi (Original A and B models) and yet
-be forwards compatible with the Arm7 versions (Pi2 etc).
+Only run it on a clean Raspbian Jessie SD card running in a Raspberry Pi Arm6 model -
+that way it will include the correct instruction set for other Arm6 type Pi (Original
+A and B models) and yet be forwards compatible with the Arm7 versions (Pi2 etc).
 
 Transfer all the files from this project to the Pi.
 
@@ -20,9 +20,9 @@ You should only run this script once.
 
 Firstly it does an apt-get update and installs node.js and npm.
 
-It then npm installs the latest Node-RED from npm. This can take 10-15 mins on a Pi 1.
+It then npm installs the latest Node-RED from npm. This can take 20-30 mins on a Pi 1.
 
-It also installs the node-red-admin tool, and a few useful extra nodes.
+It also installs a few useful extra nodes.
 
 Then it removes a load of crud files from all the installed dependancies -
 such as test, doc, samples, examples and so on.
@@ -37,7 +37,7 @@ menu - programming
 The deb package version number is set at the top of this script. Edit as necessary.
 For example
 
-    VER=0.12.2
+    VER=0.15.3
 
 Next run this script - it also cleans up the crud just to be sure... then packs
 all the files and unpacks them into a directory in `/tmp/`
