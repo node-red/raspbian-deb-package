@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2016 IBM Corp.
+# Copyright 2016,2017 IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,8 +138,8 @@ case $yn in
         echo -ne "\r\nStarted  $time1  -  Finished  $(date)\r\n\r\n"
         echo "Finished : "$time1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
     ;;
-        * )
-            echo " "
-            exit
+    * )
+        echo " "
+        exit
     ;;
 esac
