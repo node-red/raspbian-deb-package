@@ -27,7 +27,7 @@ echo "may need you to run npm update, and some may require you to run npm rebuil
 echo " "
 echo "There may be a period of frustration ahead to get back to where you were..."
 echo " "
-read -p "Are you really, really sure you want to do this ? " yn
+read -p "Are you really sure you want to do this ? (y/N) ? " yn
 case $yn in
     [Yy]* )
         # this script assumes that $HOME is the folder of the user that runs node-red
@@ -79,11 +79,11 @@ case $yn in
             rm node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             echo -ne "  Install node.js for Armv6           $CHAR"
         else
-            echo -ne "  Install node.js for Armv7           \r"
+            echo -ne "  Install node.js LTS                 \r"
             # use the official script to install for Arm7
             curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            echo -ne "  Install node.js for Armv7           $CHAR"
+            echo -ne "  Install node.js LTS                 $CHAR"
         fi
         hash -r
         #echo "Installed"
@@ -125,10 +125,10 @@ case $yn in
         if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo chmod +x /usr/bin/update-nodejs-and-nodered
-        sudo systemctl daemon-reload
-        sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
-        sudo setcap cap_net_raw=ep /bin/ping
-        sudo setcap cap_net_raw=ep /bin/ping6
+        sudo systemctl daemon-reload 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo setcap cap_net_raw=ep /bin/ping6 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne "  Update update script                $CHAR\r\n"
         echo -ne "\r\n\r\n\r\n"
         echo -ne "All done.\r\n"
@@ -140,6 +140,6 @@ case $yn in
     ;;
     * )
         echo " "
-        exit
+        exit 1
     ;;
 esac

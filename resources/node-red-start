@@ -52,9 +52,26 @@ if [[ $(which node-red) ]]; then
         echo " "
         sudo journalctl -f -n 0 -u nodered -o cat
     else
-        echo "Node is not installed"
+        echo "Node is not yet installed"
         update-nodejs-and-nodered $USER
-        read -p "Would you like to start Node-RED now (y/n) ? " yn
+        if [ $? -eq 0 ]; then
+            read -p "Would you like to start Node-RED now (y/N) ? " yn
+            case $yn in
+                [Yy]* )
+                    node-red-start
+                ;;
+                * )
+                    echo " "
+                    exit
+                ;;
+            esac
+        fi
+    fi
+else
+    echo "Node-RED is not yet installed"
+    update-nodejs-and-nodered $USER
+    if [ $? -eq 0 ]; then
+        read -p "Would you like to start Node-RED now (y/N) ? " yn
         case $yn in
             [Yy]* )
                 node-red-start
@@ -65,17 +82,4 @@ if [[ $(which node-red) ]]; then
             ;;
         esac
     fi
-else
-    echo "Node-RED is not installed"
-    update-nodejs-and-nodered $USER
-    read -p "Would you like to start Node-RED now (y/n) ? " yn
-    case $yn in
-        [Yy]* )
-            node-red-start
-        ;;
-        * )
-            echo " "
-            exit
-        ;;
-    esac
 fi

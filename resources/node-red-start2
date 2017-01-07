@@ -55,9 +55,9 @@ if [[ $(which node-red) ]]; then
             sudo tail -f /var/log/node-red.log
         fi
     else
-        echo "Node is not installed"
+        echo "Node is not yet installed"
         update-nodejs-and-nodered $USER
-        read -p "Would you like to start Node-RED now (y/n) ? " yn
+        read -p "Would you like to start Node-RED now (y/N) ? " yn
         case $yn in
             [Yy]* )
                 node-red-start
@@ -69,9 +69,9 @@ if [[ $(which node-red) ]]; then
         esac
     fi
 else
-    echo "Node-RED is not installed"
+    echo "Node-RED is not yet installed"
     update-nodejs-and-nodered $USER
-    read -p "Would you like to start Node-RED now (y/n) ? " yn
+    read -p "Would you like to start Node-RED now (y/N) ? " yn
     case $yn in
         [Yy]* )
             node-red-start
