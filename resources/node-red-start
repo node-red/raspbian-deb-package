@@ -52,7 +52,7 @@ if [[ $(which node-red) ]]; then
         echo " "
         sudo journalctl -f -n 0 -u nodered -o cat
     else
-        echo "Node is not yet installed"
+        echo "Node is not yet fully installed"
         update-nodejs-and-nodered $USER
         if [ $? -eq 0 ]; then
             read -p "Would you like to start Node-RED now (y/N) ? " yn
@@ -68,7 +68,7 @@ if [[ $(which node-red) ]]; then
         fi
     fi
 else
-    echo "Node-RED is not yet installed"
+    echo "Node-RED is not yet fully installed"
     update-nodejs-and-nodered $USER
     if [ $? -eq 0 ]; then
         read -p "Would you like to start Node-RED now (y/N) ? " yn

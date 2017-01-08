@@ -41,11 +41,13 @@ case $yn in
         CROSS='\033[1;31m\u2718\033[0m'
         time1=$(date)
         sudo rm /var/log/nodered-install.log
+        clear
         echo "Started : "$time1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
 
         cd "$NODERED_HOME"
         echo -ne "\r\nThis can take 20-30 minutes on a Pi 1 - please wait.\r\n\n"
         echo -ne '  Stop Node-RED                       \r\n'
+        echo -ne '  Remove old version of Node-RED      \r\n'
         echo -ne '  Remove old version of node.js       \r\n'
         echo -ne '  Install node.js                     \r\n'
         echo -ne '  Clean npm cache                     \r\n'
@@ -57,44 +59,61 @@ case $yn in
         echo -ne '  Update systemd script               \r\n'
         echo -ne '  Update update script                \r\n'
         echo -ne '\r\nAny errors will be logged to   /var/log/nodered-install.log\r\n'
-        echo -ne '\033[13A'
+        echo -ne '\033[14A'
 
         if node-red-stop 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null ; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Stop Node-RED                       $CHAR\r\n"
-        sudo apt-get remove -y nodered nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo rm -rf /usr/local/lib/node_modules/node-* /usr/local/bin/node-* /usr/local/bin/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        #sudo rm -rf /usr/lib/node_modules/node-* /usr/bin/node-* /usr/bin/npm*
-        # grab the correct LTS bundle for the processor
-        echo -ne '  Remove old version of node.js       \033[1;32m\u2714\033[0m\r\n'
-        if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
-            echo -ne "  Install node.js for Armv6           \r"
-            f=$(wget https://nodejs.org/download/release/latest-boron/ -qO- | grep "armv6l.tar.gz" | cut -d '"' -f 2)
-            wget https://nodejs.org/download/release/latest-boron/$f -O node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            # unpack it into the correct places
-            if sudo tar -zxf node.tgz --strip-components=1 -C /usr 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            # remove the tgz file to save space
-            rm node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            echo -ne "  Install node.js for Armv6           $CHAR"
-        else
-            echo -ne "  Install node.js LTS                 \r"
-            # use the official script to install for Arm7
-            curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+
+        sudo apt-get remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
+        if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
+            echo -ne '  Remove old version of node.js       .\r\n'
+            echo -ne "  Update node.js LTS                  \r"
             if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            echo -ne "  Install node.js LTS                 $CHAR"
+            echo -ne "  Update node.js LTS                  $CHAR"
+        else
+            # clean out old nodejs stuff
+            sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo rm -rf /usr/local/bin/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            echo -ne '  Remove old version of node.js       \033[1;32m\u2714\033[0m\r\n'
+            # grab the correct LTS bundle for the processor
+            if $(cat /proc/cpuinfo | grep model | grep -q ARMv6) ; then
+                echo -ne "  Install node.js for Armv6           \r"
+                f=$(wget https://nodejs.org/download/release/latest-boron/ -qO- | grep "armv6l.tar.gz" | cut -d '"' -f 2)
+                wget https://nodejs.org/download/release/latest-boron/$f -O node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                # unpack it into the correct places
+                if sudo tar -zxf node.tgz --strip-components=1 -C /usr 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                # remove the tgz file to save space
+                rm node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                echo -ne "  Install node.js for Armv6           $CHAR"
+            else
+                echo -ne "  Install node.js LTS                 \r"
+                # use the official script to install for other debian platforms
+                curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                echo -ne "  Install node.js LTS                 $CHAR"
+            fi
         fi
         hash -r
         #echo "Installed"
         echo -ne "   Node $(node -v)   Npm $(npm -v)\r\n"
         # and install Node-RED
-        sudo npm cache clean
+        sudo npm cache clean 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Clean npm cache                     $CHAR\r\n"
         if sudo npm i -g --unsafe-perm --no-progress node-red 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Install Node-RED core               $CHAR\r\n"
-        if sudo npm i -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat node-red-contrib-play-audio 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+        if sudo npm i -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-contrib-ibm-watson-iot node-red-contrib-play-audio 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+        if sudo grep -q BCM270 /proc/cpuinfo; then
+            sudo npm i -g --unsafe-perm --no-progress node-red-node-ledborg node-red-node-pi-sense-hat 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        else
+            sudo rm -rf /usr/lib/node_modules/node-red/nodes/core/hardware/36*
+        fi
         echo -ne "  Install extra nodes                 $CHAR\r\n"
         sudo rm -rf /usr/lib/node_modules/node-red/node_modules/node-red-node-serialport
         if sudo npm i -g --unsafe-perm --no-progress node-red-node-serialport 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
