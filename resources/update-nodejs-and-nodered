@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+if [[ "$(uname)" != "Darwin" ]]; then
 if [[ $(cat /etc/*-release | grep VERSION=) != *"wheezy"* ]]; then
 echo -e '\033]2;'Node-RED update'\007'
 echo " "
@@ -173,7 +174,13 @@ esac
 else
 echo " "
 echo "Sorry - I'm not able to upgrade old Wheezy installations. Please think about updating."
-echo "See the documentation at http://nodered.org/docs/getting-started/upgrading."
+echo "Please see the documentation at http://nodered.org/docs/getting-started/upgrading."
 echo " "
 exit 1
+fi
+else
+echo " "
+echo "Sorry - I'm not supposed to be run on a Mac."
+echo "Please see the documentation at http://nodered.org/docs/getting-started/upgrading."
+echo " "
 fi
