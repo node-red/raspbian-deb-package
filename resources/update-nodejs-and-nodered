@@ -43,9 +43,11 @@ case $yn in
         CROSS='\033[1;31m\u2718\033[0m'
         cd "$NODERED_HOME" || exit 1
         clear
+        echo "Running for user $USER at $HOME"
         time1=$(date)
         sudo rm -f /var/log/nodered-install.log
         echo "Started : "$time1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        echo "Running for user $USER at $HOME" | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '\r\nThis can take 20-30 minutes on a Pi 1 - please wait.\r\n\n'
         echo -ne '  Stop Node-RED                       \r\n'
         echo -ne '  Remove old version of Node-RED      \r\n'
@@ -62,15 +64,19 @@ case $yn in
         echo -ne '\r\nAny errors will be logged to   /var/log/nodered-install.log\r\n'
         echo -ne '\033[14A'
 
+        # stop any running node-red service
         if sudo service nodered stop 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null ; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Stop Node-RED                       $CHAR\r\n"
 
+        # remove any old node-red installs or files
         sudo apt-get remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
+
+        # maybe remove node.js - or upgrade if nodesoure.list exists
         if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
-            echo -ne '  Remove old version of node.js       .\r\n'
+            echo -ne '  Remove old version of node.js       -\r\n'
             echo -ne "  Update node.js LTS                  \r"
             if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update node.js LTS                  $CHAR"
@@ -110,32 +116,41 @@ case $yn in
             echo -ne "\b$CROSS   Failed to install node.js - Exit\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
             exit 2
         fi
-        # and install Node-RED
+
+        # clean up the npm cache and node-gyp
         sudo npm cache clean 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Clean npm cache                     $CHAR\r\n"
+
+        # and install Node-RED
         if sudo npm i -g --unsafe-perm --no-progress node-red 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         nrv=$(npm --no-progress -g ls node-red | grep node-red | cut -d '@' -f 2 | sudo tee -a /var/log/nodered-install.log) >>/dev/null 2>&1
         echo -ne "  Install Node-RED core               $CHAR   $nrv\r\n"
+
+        # install extra nodes - random, ping, smooth, iot, play-audio
         if sudo npm i -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-contrib-ibm-watson-iot node-red-contrib-play-audio 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+        # install Pi nodes (and remove GPIO if not on Pi)
         if sudo grep -q BCM270 /proc/cpuinfo; then
             sudo npm i -g --unsafe-perm --no-progress node-red-node-ledborg node-red-node-pi-sense-hat 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         else
             sudo rm -rf /usr/lib/node_modules/node-red/nodes/core/hardware/36*
         fi
         echo -ne "  Install extra nodes                 $CHAR\r\n"
+
+        # remove and re-install serialport (won't need to on/after 0.16)
         sudo rm -rf /usr/lib/node_modules/node-red/node_modules/node-red-node-serialport
         if sudo npm i -g --unsafe-perm --no-progress node-red-node-serialport 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Install serialport node             $CHAR\r\n"
+
         # try to rebuild any already installed nodes
-        if [ -d "$NODERED_HOME/.node-red" ]
-        then
+        if [ -d "$NODERED_HOME/.node-red" ]; then
             pushd "$NODERED_HOME/.node-red" 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             if npm rebuild  2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             popd 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         fi
         echo -ne "  Npm rebuild existing nodes          $CHAR\r\n"
-        # Now add the shortcut to the menu
+
+        # add the shortcut and start/stop/log scripts to the menu
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-icon.svg -O /usr/share/icons/gnome/scalable/apps/node-red-icon.svg 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop -O /usr/share/applications/Node-RED.desktop 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 -O /usr/bin/node-red-start 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
@@ -143,21 +158,29 @@ case $yn in
         sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log -O /usr/bin/node-red-log 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo chmod +x /usr/bin/node-red-st*
         sudo chmod +x /usr/bin/node-red-log
-        lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne "  Add menu shortcut                   \033[1;32m\u2714\033[0m\r\n"
-        # and add the start and stop scripts to systemd
+
+        # add systemd script and configure it for $USER
         if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.service -O /lib/systemd/system/nodered.service 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         # set the User Group and WorkingDirectory in nodered.service
         sudo sed -i 's#^User=pi#User='$NODERED_USER'#;s#^Group=pi#Group='$NODERED_GROUP'#;s#^WorkingDirectory=/home/pi#WorkingDirectory='$NODERED_HOME'#;' /lib/systemd/system/nodered.service
-        echo -ne "  Update systemd script               $CHAR\r\n"
-        if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-        sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo chmod +x /usr/bin/update-nodejs-and-nodered
         sudo systemctl daemon-reload 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo setcap cap_net_raw=ep /bin/ping6 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        echo -ne "  Update systemd script               $CHAR\r\n"
+
+        # on Pi, add cpu temp example, make sure ping works, refresh desktop menu
+        if sudo grep -q BCM270 /proc/cpuinfo; then
+            lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo setcap cap_net_raw=ep /bin/ping6 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        fi
+
+        # Finally update the update script
+        if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+        sudo chmod +x /usr/bin/update-nodejs-and-nodered
         echo -ne "  Update update script                $CHAR\r\n"
+
         echo -ne "\r\n\r\n\r\n"
         echo -ne "All done.\r\n"
         echo -ne "  You can now start Node-RED with the command  \033[0;36mnode-red-start\033[0m\r\n"
