@@ -82,7 +82,7 @@ case $yn in
             nvm alias default lts/* >/dev/null 2>&1
             echo -ne "  Update node.js LTS                  $CHAR"
         elif [[ $(which n) ]]; then
-            echo -ne '  Using N to manage node.js           +\r\n'
+            echo -ne "  Using N to manage node.js           +\r\n"
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update node.js LTS                  $CHAR"
         elif [ -e /etc/apt/sources.list.d/nodesource.list ]; then
@@ -93,7 +93,7 @@ case $yn in
             else
                 CHAR="-"
             fi
-            echo -ne '  Remove old version of node.js       $CHAR\r\n'
+            echo -ne "  Remove old version of node.js       $CHAR\r\n"
             echo -ne "  Update node.js LTS                  \r"
             if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update node.js LTS                  $CHAR"
@@ -104,7 +104,7 @@ case $yn in
             sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -rf /usr/local/bin/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            echo -ne '  Remove old version of node.js       \033[1;32m\u2714\033[0m\r\n'
+            echo -ne "  Remove old version of node.js       \033[1;32m\u2714\033[0m\r\n"
             # grab the correct LTS bundle for the processor
             if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
                 echo -ne "  Install node.js for Armv6           \r"
