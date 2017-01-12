@@ -27,8 +27,6 @@ echo "Especially if they have any native binary component. Some nodes in your"
 echo "~/.node-red directory will probably need to be re-installed afterwards, some"
 echo "may need you to run npm update, and some may require you to run npm rebuild."
 echo " "
-echo "There may be a period of frustration ahead to get back to where you were..."
-echo " "
 read -p "Are you really sure you want to do this ? (y/N) ? " yn
 case $yn in
     [Yy]* )
@@ -83,7 +81,7 @@ case $yn in
             nvm use lts/* >/dev/null 2>&1
             nvm alias default lts/* >/dev/null 2>&1
             echo -ne "  Update node.js LTS                  $CHAR"
-        elif [ $(which n) ]; then
+        elif [[ $(which n) ]]; then
             echo -ne '  Using N to manage node.js           +\r\n'
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update node.js LTS                  $CHAR"
@@ -189,7 +187,7 @@ case $yn in
         fi
 
         # Finally update the update script
-        if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /usr/bin/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+        if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /tmp/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         sudo chmod +x /usr/bin/update-nodejs-and-nodered
         echo -ne "  Update update script                $CHAR\r\n"
 
@@ -218,4 +216,6 @@ echo " "
 echo "Sorry - I'm not supposed to be run on a Mac."
 echo "Please see the documentation at http://nodered.org/docs/getting-started/upgrading."
 echo " "
+exit 1
 fi
+if [ -e /tmp/update-nodejs-and-nodered ]; then sudo mv /tmp/update-nodejs-and-nodered /usr/bin/update-nodejs-and-nodered; fi
