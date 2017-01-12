@@ -76,12 +76,16 @@ case $yn in
 
         # maybe remove node.js - or upgrade if nodesoure.list exists
         if [[ -e $NODERED_HOME/.nvm ]]; then
-            echo -ne '  Using NVM to manage node.js         +   please run  \033[0;36mnvm use lts/*\033[0m\r\n'
+            echo -ne '  Using NVM to manage node.js         +   please run   \033[0;36mnvm use lts/*\033[0m\r\n'
             export NVM_DIR=$NODERED_HOME/.nvm
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             nvm install lts/* >/dev/null 2>&1
             nvm use lts/* >/dev/null 2>&1
             nvm alias default lts/* >/dev/null 2>&1
+            echo -ne "  Update node.js LTS                  $CHAR"
+        elif [ $(which n) ]; then
+            echo -ne '  Using N to manage node.js           +\r\n'
+            if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update node.js LTS                  $CHAR"
         elif [ -e /etc/apt/sources.list.d/nodesource.list ]; then
             echo -ne '  Remove old version of node.js       -\r\n'
@@ -126,8 +130,8 @@ case $yn in
         fi
 
         # clean up the npm cache and node-gyp
-        if sudo npm cache clean | sudo tee -a /var/log/nodered-install.log >/dev/null 2>&1; then CHAR=$TICK; else CHAR=$CROSS; fi
-        sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm >/dev/null 2>&1
+        sudo npm cache clean 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Clean npm cache                     $CHAR\r\n"
 
         # and install Node-RED
