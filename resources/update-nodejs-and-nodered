@@ -75,7 +75,12 @@ case $yn in
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
 
         # maybe remove node.js - or upgrade if nodesoure.list exists
-        if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
+        if [ `which nvm` ]; then
+            echo -ne '  Using NVM to manage node.js         +\r\n'
+            if nvm install --lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+            nvm use --lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            echo -ne "  Update node.js LTS                  $CHAR"
+        elif [ -e /etc/apt/sources.list.d/nodesource.list ]; then
             echo -ne '  Remove old version of node.js       -\r\n'
             echo -ne "  Update node.js LTS                  \r"
             if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
