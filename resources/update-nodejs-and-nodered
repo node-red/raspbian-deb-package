@@ -13,6 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+if [ "$EUID" == "0" ]
+  then echo -en "\nRoot user detected. Typically install as a normal user. No need for sudo.\r\n"
+  read -p "Are you really sure you want to install as root ? (y/N) ? " yn
+  case $yn in
+    [Yy]* )
+    ;;
+    * )
+      exit
+    ;;
+  esac
+fi
 if [[ "$(uname)" != "Darwin" ]]; then
 if [[ $(cat /etc/*-release | grep VERSION=) != *"wheezy"* ]]; then
 echo -e '\033]2;'Node-RED update'\007'
@@ -87,7 +98,7 @@ case $yn in
             echo -ne "  Update node.js LTS                  $CHAR"
         elif [ -e /etc/apt/sources.list.d/nodesource.list ]; then
             nv=`node -v | cut -d "." -f1`
-            if [ "$nv" = "v0" ]; then
+            if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v5" ]; then
                 sudo rm -rf /etc/apt/sources.d/nodesource.list
                 if curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             else
