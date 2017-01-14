@@ -1,4 +1,4 @@
-*.deb
+noder*.deb
 lint.log
 .DS_Store
 grab*
@@ -6,3 +6,4 @@ packit*
 report
 runit*
 upgrade*
+minipack
