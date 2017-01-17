@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.16.0
+VER=0.16.1
 
 sudo rm -rf /usr/local/bin/node-red*
 sudo rm -rf /usr/bin/node-red*
