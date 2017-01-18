@@ -207,7 +207,7 @@ case $yn in
 
         # Finally update the update script
         if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /tmp/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-        sudo chmod +x /usr/bin/update-nodejs-and-nodered
+        sudo chmod +x /tmp/update-nodejs-and-nodered 
         echo -ne "  Update update script                $CHAR\r\n"
 
         echo -ne "\r\n\r\n\r\n"
