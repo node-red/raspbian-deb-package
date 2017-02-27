@@ -200,6 +200,8 @@ case $yn in
         if sudo grep -q BCM270 /proc/cpuinfo; then
             lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json -O /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nrgpio.py -O /usr/lib/node_modules/node-red/nodes/core/hardware/nrgpio.py 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo chmod +x /usr/lib/node_modules/node-red/nodes/core/hardware/nrgpio.py
             sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping6 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
@@ -207,7 +209,7 @@ case $yn in
 
         # Finally update the update script
         if sudo wget https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-nodejs-and-nodered -O /tmp/update-nodejs-and-nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-        sudo chmod +x /tmp/update-nodejs-and-nodered 
+        sudo chmod +x /tmp/update-nodejs-and-nodered
         echo -ne "  Update update script                $CHAR\r\n"
 
         echo -ne "\r\n\r\n\r\n"
