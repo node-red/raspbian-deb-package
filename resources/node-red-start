@@ -34,11 +34,13 @@ if [[ $(which node-red) ]]; then
         echo -e "\033[1mStart \033[38;5;88mNode-RED\033[0m"
         echo " "
         echo "Once Node-RED has started, point a browser at http://$HOSTIP:1880"
-        echo "On Pi Node-RED works better with the Firefox browser"
+        echo "On Pi Node-RED works better with the Firefox or Chrome browser"
         echo " "
-        echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
-        echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
-        echo -e "Use   \033[0;36mnode-red-log\033[0m                           to view the recent log output"
+        if groups | grep -q -w sudo; then
+            echo -e "Use   \033[0;36mnode-red-stop\033[0m                          to stop Node-RED"
+            echo -e "Use   \033[0;36mnode-red-start\033[0m                         to start Node-RED again"
+            echo -e "Use   \033[0;36mnode-red-log\033[0m                           to view the recent log output"
+        fi
         echo -e "Use   \033[0;36msudo systemctl enable nodered.service\033[0m  to autostart Node-RED at every boot"
         echo -e "Use   \033[0;36msudo systemctl disable nodered.service\033[0m to disable autostart on boot"
         echo " "
@@ -48,9 +50,16 @@ if [[ $(which node-red) ]]; then
             echo -e "      \033[0;36msudo apt-get install npm\033[0m"
             echo -e "      \033[0;36msudo npm i -g npm@2.x\033[0m"
         fi
-        sudo service nodered start
-        echo " "
-        sudo journalctl -f -n 0 -u nodered -o cat
+        if groups | grep -q -w sudo; then
+              # Current user is member of sudo group, start node-red through systemd
+              sudo service nodered start
+              echo " "
+              echo "Starting as a systemd service."
+              sudo journalctl -f -n 0 -u nodered -o cat
+          else
+              # Start node-red as unprivileged user
+              node-red-pi
+          fi
     else
         echo "Node is not yet fully installed"
         update-nodejs-and-nodered $USER
