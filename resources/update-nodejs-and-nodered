@@ -158,7 +158,7 @@ case $yn in
         # install extra nodes - random, ping, smooth, iot, play-audio
         if sudo npm i -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-contrib-ibm-watson-iot node-red-contrib-play-audio 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         # install Pi nodes (and remove GPIO if not on Pi)
-        if sudo grep -q BCM270 /proc/cpuinfo; then
+        if sudo grep -q BCM2 /proc/cpuinfo; then
             sudo npm i -g --unsafe-perm --no-progress node-red-node-ledborg node-red-node-pi-sense-hat 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         else
             sudo rm -rf /usr/lib/node_modules/node-red/nodes/core/hardware/36*
