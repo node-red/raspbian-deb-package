@@ -146,7 +146,7 @@ case $yn in
         fi
 
         # clean up the npm cache and node-gyp
-        sudo npm cache clean 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo npm cache clean --force 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Clean npm cache                     $CHAR\r\n"
 
