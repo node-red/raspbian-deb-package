@@ -23,8 +23,13 @@ sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /usr/bin/update-nodejs-and-nodered
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo rm -rf /root/.npm /root/.node-gyp
+
 sudo apt-get install nodejs nodejs-legacy npm lintian -y
 sudo npm install -g --unsafe-perm npm@3.x
+# Get node.js 4.8.2 to match stretch ... for now
+#wget https://nodejs.org/download/release/v4.8.2/node-v4.8.2-linux-armv6l.tar.gz -O /tmp/node.tgz
+#sudo tar -zxf /tmp/node.tgz --strip-components=1 -C /usr
+
 hash -r
 sudo npm cache clean
 echo " "

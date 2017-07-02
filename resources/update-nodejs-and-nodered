@@ -203,6 +203,7 @@ case $yn in
             sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping6 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo perl -pi -e 's/GPIO27 - 13 <input type="radio" name="pins" value="12"/GPIO27 - 13 <input type="radio" name="pins" value="13"/g' /usr/lib/node_modules/node-red/nodes/core/hardware/36-rpi-gpio.html
         fi
 
         # Finally update the update script

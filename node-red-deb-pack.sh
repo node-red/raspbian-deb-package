@@ -14,7 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.15.3
+VER=0.17.2
+
+perl -pi -e 's/GPIO27 - 13 <input type="radio" name="pins" value="12"/GPIO27 - 13 <input type="radio" name="pins" value="13"/g' /usr/lib/node_modules/node-red/nodes/core/hardware/36-rpi-gpio.html
+
+cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
+sudo find . -type d -name test -exec rm -r {} \;
+sudo find . -type d -name doc -exec rm -r {} \;
+sudo find . -type d -name example* -exec rm -r {} \;
+sudo find . -type d -name sample -exec rm -r {} \;
 
 cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -113,7 +121,7 @@ echo "Version: $VER" | sudo tee -a control
 echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
-echo "Depends: nodejs (>= 0.10), nodejs-legacy (>= 0.10), python (>= 2.7)" | sudo tee -a control
+echo "Depends: nodejs (>= 4), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control
@@ -121,7 +129,7 @@ echo " A graphical flow editor for event based applications." | sudo tee -a cont
 echo " Runs on node.js - using a browser for the user interface." | sudo tee -a control
 echo " See http://nodered.org for more information, documentation and examples." | sudo tee -a control
 echo " ." | sudo tee -a control
-echo " Copyright 2015,2016 IBM Corp." | sudo tee -a control
+echo " Copyright 2015,2017 IBM Corp." | sudo tee -a control
 echo " Licensed under the Apache License, Version 2.0" | sudo tee -a control
 echo " http://www.apache.org/licenses/LICENSE-2.0" | sudo tee -a control
 
