@@ -14,9 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.17.2
-
-perl -pi -e 's/GPIO27 - 13 <input type="radio" name="pins" value="12"/GPIO27 - 13 <input type="radio" name="pins" value="13"/g' /usr/lib/node_modules/node-red/nodes/core/hardware/36-rpi-gpio.html
+VER=0.17.3
 
 cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -121,7 +119,7 @@ echo "Version: $VER" | sudo tee -a control
 echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
-echo "Depends: nodejs (>= 4), python (>= 2.7)" | sudo tee -a control
+echo "Depends: nodejs (>= 4), nodejs-legacy (>= 4), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control
