@@ -1,11 +1,15 @@
 # raspbian-deb-package
-Scripts required to build the Node-RED deb package for Raspbian.
+
+Scripts required to build the Node-RED deb package for Raspbian Stretch ONLY,
+as it requires node.js v4.* 
+
+The last version of Node-RED for Jessie was 0.15.3.
 
 **WARNING**: If you already have Node-RED installed **do not** run this *just for fun*. It will probably break your existing install.
 
-Only run it on a clean Raspbian Jessie SD card running in a Raspberry Pi Arm6 model -
+Only run it on a clean Raspbian Stretch SD card running in a Raspberry Pi Arm6 model -
 that way it will include the correct instruction set for other Arm6 type Pi (Original
-A and B models) and yet be forwards compatible with the Arm7 versions (Pi2 etc).
+A and B models) and yet be forwards compatible with the Arm7 versions (Pi2, 3 etc).
 
 Transfer all the files from this project to the Pi.
 
@@ -37,7 +41,7 @@ menu - programming
 The deb package version number is set at the top of this script. Edit as necessary.
 For example
 
-    VER=0.15.3
+    VER=0.17.4
 
 Next run this script - it also cleans up the crud just to be sure... then packs
 all the files and unpacks them into a directory in `/tmp/`
