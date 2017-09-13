@@ -14,10 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 if [[ -e /mnt/dietpi_userdata ]]; then
-    echo -ne "\n\033[1;32mDiet-Pi\033[0m detected - only going to add the  \033[0;36mnode-red-log\033[0m  command.\n"
-    echo -ne "Use the  \033[0;36mdietpi-software\033[0m  command to un-install and re-install \033[38;5;88mNode-RED\033[0m.\n\n"
+    echo -ne "\n\033[1;32mDiet-Pi\033[0m detected - only going to add the  \033[0;36mnode-red-start, -stop, -log\033[0m  commands.\n"
+    echo -ne "Flow files and other things worth backing up can be found in the \033[0;36m/mnt/dietpi_userdata/node-red\033[0m directory.\n\n"
+    echo -ne "Use the  \033[0;36mdietpi-software\033[0m  command to un-install and re-install \033[38;5;88mNode-RED\033[0m.\n"
     echo "journalctl -f -n 25 -u node-red -o cat" > /usr/bin/node-red-log
     chmod +x /usr/bin/node-red-log
+    echo "service node-red stop" > /usr/bin/node-red-stop
+    chmod +x /usr/bin/node-red-stop
+    echo "service node-red start" > /usr/bin/node-red-start
+    echo "journalctl -f -n 0 -u node-red -o cat" >> /usr/bin/node-red-start
+    chmod +x /usr/bin/node-red-start
 else
 
 if [ "$EUID" == "0" ]
@@ -198,9 +204,9 @@ case $yn in
 
         # and install Node-RED
         if [[ $GLOBAL == "true" ]]; then
-            if sudo npm i -g --unsafe-perm --no-progress node-red 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+            if sudo npm i -g --unsafe-perm --no-progress node-red@latest 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         else
-            if npm i -g --unsafe-perm --no-progress node-red 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+            if npm i -g --unsafe-perm --no-progress node-red@latest 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         fi
         nrv=$(npm --no-progress -g ls node-red | grep node-red | cut -d '@' -f 2 | sudo tee -a /var/log/nodered-install.log) >>/dev/null 2>&1
         echo -ne "  Install Node-RED core               $CHAR   $nrv\r\n"
