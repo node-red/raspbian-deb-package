@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright 2015,2017 IBM Corp.
+# Copyright 2016,2017 JS Foundation and other contributors, https://js.foundation/
+# Copyright 2015,2016 IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -91,12 +92,12 @@ if [ -d "resources" ]; then
     sudo chown root:root *
     sudo chmod +x node-red-st*
     sudo chmod +x node-red-log
-    sudo chmod +x update-nodejs-and-nodered
+    sudo chmod +x update-pi
     sudo cp nodered.service /lib/systemd/system/
     sudo cp node-red-start /usr/bin/
     sudo cp node-red-stop /usr/bin/
     sudo cp node-red-log /usr/bin/
-    sudo cp update-nodejs-and-nodered /usr/bin/
+    sudo cp update-pi /usr/bin/update-nodejs-and-nodered
     sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop

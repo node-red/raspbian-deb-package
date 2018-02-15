@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright 2015,2017 IBM Corp.
+# Copyright 2016,2017 JS Foundation and other contributors, https://js.foundation/
+# Copyright 2015,2016 IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.17.4
+VER=0.18.3
 
 cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;

@@ -7,3 +7,4 @@ report
 runit*
 upgrade*
 minipack
+*.deb
