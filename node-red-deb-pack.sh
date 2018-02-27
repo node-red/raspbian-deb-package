@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2016,2017 JS Foundation and other contributors, https://js.foundation/
+# Copyright 2016,2018 JS Foundation and other contributors, https://js.foundation/
 # Copyright 2015,2016 IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.18.3
+VER=0.18.4
 
 cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
@@ -125,9 +125,10 @@ echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control
 echo " A graphical flow editor for event based applications." | sudo tee -a control
-echo " Runs on node.js - using a browser for the user interface." | sudo tee -a control
+echo " Runs on Node.js - using a browser for the user interface." | sudo tee -a control
 echo " See http://nodered.org for more information, documentation and examples." | sudo tee -a control
 echo " ." | sudo tee -a control
+echo " Copyright 2017,2018 JS Foundation and other contributors, https://js.foundation/" | sudo tee -a control
 echo " Copyright 2015,2017 IBM Corp." | sudo tee -a control
 echo " Licensed under the Apache License, Version 2.0" | sudo tee -a control
 echo " http://www.apache.org/licenses/LICENSE-2.0" | sudo tee -a control
