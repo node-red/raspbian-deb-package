@@ -98,8 +98,8 @@ if [ -d "resources" ]; then
     sudo cp node-red-stop /usr/bin/
     sudo cp node-red-log /usr/bin/
     sudo cp update-pi /usr/bin/update-nodejs-and-nodered
-    sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-    sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+    sudo cp node-red-icon.svg /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
+    sudo chmod 644 /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
     sudo cp Pi\ cpu\ temperature.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
     sudo cp cpu\ load.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/

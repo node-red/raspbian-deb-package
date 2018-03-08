@@ -17,6 +17,13 @@
 
 VER=0.18.4
 
+cd /usr/lib/node_modules
+sudo find . -type f -name .DS_Store -exec rm {} \;
+
+cd /usr/lib/node_modules/node-red/node_modules/osenv
+sudo touch LICENSE
+sudo touch osenv.js
+
 cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
@@ -76,9 +83,7 @@ sudo find . -type f -iname "*~" -exec rm {} \;
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
-#sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /home/pi/.node-red* /usr/share/applications/Node-RED.desktop /etc/init.d/nodered /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-#sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-sudo tar zcf /tmp/nred.tgz /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nred.tgz /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nred.tgz
 echo " "
