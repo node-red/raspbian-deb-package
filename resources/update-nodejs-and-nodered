@@ -44,8 +44,8 @@ wget -q --spider https://www.npmjs.com/package/node-red
 if  [ $? -eq 0 ]; then
 echo -e '\033]2;'Node-RED update'\007'
 echo " "
-echo "This script will remove versions of Node.js prior to version 6.x of Node.js and Node-RED"
-echo "and if necessary replace them with Node.js 8.x LTS (carbon) and the latest Node-RED from Npm."
+echo "This script will remove versions of Node.js prior to version 6.x, and Node-RED and"
+echo "if necessary replace them with Node.js 8.x LTS (carbon) and the latest Node-RED from Npm."
 echo " "
 echo "It also moves any Node-RED nodes that are globally installed into your user"
 echo "~/.node-red/node_modules directory, and adds them to your package.json, so that"
@@ -157,6 +157,7 @@ case $yn in
             sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo rm -f /usr/local/bin/node* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -f /usr/local/bin/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
