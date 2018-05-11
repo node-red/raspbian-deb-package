@@ -15,14 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.18.4
+VER=0.18.5
 
 cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
-
-cd /usr/lib/node_modules/node-red/node_modules/osenv
-sudo touch LICENSE
-sudo touch osenv.js
+sudo find . -not -newermt 1971-01-01 -exec touch {} \;
 
 cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
