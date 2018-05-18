@@ -78,12 +78,10 @@ sudo npm install -g --unsafe-perm --no-progress node-red-node-random node-red-no
 sudo npm install -g --unsafe-perm --no-progress node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
 # sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 
-match='uiPort: 1880,'
+match='editorTheme: {'
 file='/usr/lib/node_modules/node-red/settings.js'
-insert='\n    editorTheme: { menu: { \"menu-item-help": {\n        label: \"Node-RED Pi Website\",\n        url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n    } } },\n'
-sudo sed -i "s/$match/$match\n$insert/" $file
-echo "**** settings.js ****"
-head -n 32 /usr/lib/node_modules/node-red/settings.js
+insert='editorTheme: {\n        menu: { \"menu-item-help\": {\n            label: \"Node-RED Pi Website\",\n            url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n        } },'
+sudo sed -i "s|$match|$insert|" $file
 echo "*********************"
 
 # Get systemd script - start and stop scripts - svg icon - and .desktop file into correct places.
