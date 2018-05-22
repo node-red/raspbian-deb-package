@@ -268,9 +268,15 @@ case $yn in
         sudo systemctl daemon-reload 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne "  Update systemd script               $CHAR\r\n"
 
-        # on Pi, add cpu temp example, make sure ping works, refresh desktop menu
+        # on Pi, add launcher to top bar, add cpu temp example, make sure ping works, refresh desktop menu
         if sudo grep -q BCM2 /proc/cpuinfo; then
-            lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
+            if ! grep "Node-RED" $file; then
+                match='lxterminal.desktop'
+                insert='lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop'
+                sudo sed -i "s|$match|$insert|" $file
+            fi
+            export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo curl -sL -o /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
