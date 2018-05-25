@@ -157,6 +157,7 @@ case $yn in
             sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo rm -rf /opt/nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -f /usr/local/bin/node* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -f /usr/local/bin/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
