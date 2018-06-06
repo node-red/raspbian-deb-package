@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.18.7
+VER=0.18.7-1
 
 cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
@@ -115,6 +115,9 @@ sudo chmod 644 usr/lib/node_modules/node-red/editor/vendor/font-awesome/fonts/*
 sudo chmod 755 usr/lib/node_modules/node-red/red.js
 sudo chmod 755 usr/lib/node_modules/node-red-admin/node-red-admin.js
 
+SIZE=`du -ks . | cut -f 1`
+echo "Installed size is $SIZE"
+
 echo "Create control file"
 cd DEBIAN
 echo "Package: nodered" | sudo tee control
@@ -122,6 +125,7 @@ echo "Version: $VER" | sudo tee -a control
 echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
+echo "Installed-Size: $SIZE" | sudo tee -a control
 echo "Depends: nodejs (>= 4), nodejs-legacy (>= 4), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
