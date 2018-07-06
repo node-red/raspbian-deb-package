@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.18.4
+VER=0.18.7-3
 
 sudo rm -rf /usr/local/bin/node-red*
 sudo rm -rf /usr/bin/node-red*
@@ -26,13 +26,20 @@ if [ -d "resources" ]; then
     cd resources
     sudo chown root:root *
     sudo chmod +x node-red-start
-    sudo chmod +x update-nodejs-and-nodered
+    sudo chmod +x update-pi
     sudo cp node-red-start /usr/bin/
-    sudo cp update-nodejs-and-nodered /usr/bin/
-    sudo cp node-red-icon.svg /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
-    sudo chmod 644 /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+    sudo cp update-pi /usr/bin/update-nodejs-and-nodered
+    sudo cp node-red-icon.svg /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
+    sudo chmod 644 /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
     sudo chown pi:pi *
+    file=/home/$USER/.config/lxpanel/LXDE-pi/panels/panel
+    if ! grep "Node-RED" $file; then
+        match='lxterminal.desktop'
+        insert='lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop'
+        sudo sed -i "s|$match|$insert|" $file
+    fi
+    export DISPLAY=:0 && lxpanelctl restart
     cd ..
 else
     echo " "
@@ -47,7 +54,7 @@ echo " "
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
-sudo tar zcf /tmp/nredm.tgz /usr/bin/node-red-start /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /usr/share/icons/gnome/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nredm.tgz /usr/bin/node-red-start /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nredm.tgz
 echo " "
@@ -64,6 +71,11 @@ sudo find . -iname LICENSE -exec chmod 644 {} \;
 sudo find . -iname *.png -exec chmod 644 {} \;
 sudo find . -iname *.txt -exec chmod 644 {} \;
 sudo find . -type d -exec chmod 755 {} \;
+
+SIZE=`du -ks . | cut -f 1`
+SIZE=60000;
+echo "Installed size is $SIZE"
+
 echo " "
 echo "Create control file"
 cd DEBIAN
@@ -72,6 +84,7 @@ echo "Version: $VER" | sudo tee -a control
 echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: all" | sudo tee -a control
+echo "Installed-Size: $SIZE" | sudo tee -a control
 echo "Replaces: nodered" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
@@ -80,19 +93,23 @@ echo " A graphical flow editor for event based applications." | sudo tee -a cont
 echo " Runs on node.js - using a browser for the user interface." | sudo tee -a control
 echo " See http://nodered.org for more information, documentation and examples." | sudo tee -a control
 echo " ." | sudo tee -a control
-echo " Copyright 2017 IBM Corp." | sudo tee -a control
+echo " Copyright 2017,2018 JS Foundation and other contributors, https://js.foundation/" | sudo tee -a control
+echo " Copyright 2015,2017 IBM Corp." | sudo tee -a control
 echo " Licensed under the Apache License, Version 2.0" | sudo tee -a control
 echo " http://www.apache.org/licenses/LICENSE-2.0" | sudo tee -a control
 
-echo "service nodered stop >/dev/null 2>&1; rm -f /usr/bin/node-red >/dev/null 2>&1; exit 0" | sudo tee postinst
+echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee preinst
+echo "rm -f /usr/bin/node-red >/dev/null 2>&1; exit 0" | sudo tee postinst
+echo "export DISPLAY=:0 && lxpanelctl restart >/dev/null 2>&1; exit 0" | sudo tee postinst
 echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee prerm
-echo "rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red-stop /usr/bin/node-red-log >/dev/null 2>&1; exit 0" | sudo tee postrm
-sudo chmod 0755 postinst prerm postrm
+echo "rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
+echo "export DISPLAY=:0 && lxpanelctl restart >/dev/null 2>&1; exit 0" | sudo tee postrm
+sudo chmod 0755 preinst postinst prerm postrm
 
 cd ../usr/share
 sudo mkdir -p doc/node-red
 cd doc/node-red
-echo "Copyright 2017 IBM Corp." | sudo tee copyright
+echo " Copyright 2017,2018 JS Foundation and other contributors, https://js.foundation/" | sudo tee copyright
 echo "node-red ($VER) unstable; urgency=low" | sudo tee changelog
 echo "  * Point release." | sudo tee -a changelog
 echo " -- DCJ <ceejay@vnet.ibm.com>  $(date '+%a, %d %b %Y %H:%M:%S +0000')" | sudo tee -a changelog

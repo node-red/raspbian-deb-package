@@ -120,6 +120,7 @@ case $yn in
 
         # remove any old node-red installs or files
         sudo apt-get remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        # sudo apt-get remove -y node-red-update 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
@@ -144,7 +145,7 @@ case $yn in
             if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v7" ]; then
                 sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo rm -f /etc/apt/sources.d/nodesource.list
-                if curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                if curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             else
                 CHAR="-"
             fi
@@ -253,6 +254,7 @@ case $yn in
             sudo curl -sL -o /usr/share/applications/Node-RED.desktop https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Node-RED.desktop 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo curl -sL -o /usr/bin/node-red-start https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-start2 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo curl -sL -o /usr/bin/node-red-stop https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-stop 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            sudo curl -sL -o /usr/bin/node-red-restart https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo curl -sL -o /usr/bin/node-red-log https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/node-red-log 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo chmod +x /usr/bin/node-red-start
             sudo chmod +x /usr/bin/node-red-stop
