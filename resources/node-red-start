@@ -22,6 +22,7 @@ if [[ $(which node-red) ]]; then
         echo -e "\033[0;47m    to install the latest by running:             \033[0m"
         echo -e "\033[0;47m        update-nodejs-and-nodered                 \033[0m"
         echo -e "\033[0;47m                                                  \033[0m"
+        echo -e " "
     fi
     if [[ $(which node) ]]; then
         nv=`node -v | cut -d "." -f1`
