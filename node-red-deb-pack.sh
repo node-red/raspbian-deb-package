@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.18.7-1
+VER=0.19.0
 
 cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
@@ -126,7 +126,7 @@ echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
 echo "Installed-Size: $SIZE" | sudo tee -a control
-echo "Depends: nodejs (>= 4), nodejs-legacy (>= 4), python (>= 2.7)" | sudo tee -a control
+echo "Depends: nodejs (>= 8), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control
@@ -138,6 +138,25 @@ echo " Copyright 2017,2018 JS Foundation and other contributors, https://js.foun
 echo " Copyright 2015,2017 IBM Corp." | sudo tee -a control
 echo " Licensed under the Apache License, Version 2.0" | sudo tee -a control
 echo " http://www.apache.org/licenses/LICENSE-2.0" | sudo tee -a control
+
+echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee preinst
+# echo "npm i -g npm@latest >/dev/null 2>&1; exit 0" | sudo tee postinst
+echo "hash -r >/dev/null 2>&1; exit 0" | sudo tee postinst
+echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee prerm
+echo "rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
+# echo "rm -rf /usr/lib/node_modules/npm /usr/local/bin/npm && hash -r >/dev/null 2>&1; exit 0" | sudo tee postrm
+echo "export DISPLAY=:0 && lxpanelctl restart >/dev/null 2>&1; exit 0" | sudo tee postrm
+sudo chmod 0755 preinst postinst prerm postrm
+
+cd ../usr/share
+sudo mkdir -p doc/nodered
+cd doc/nodered
+echo " Copyright 2017,2018 JS Foundation and other contributors, https://js.foundation/" | sudo tee copyright
+echo "nodered ($VER) unstable; urgency=low" | sudo tee changelog
+echo "  * Point release." | sudo tee -a changelog
+echo " -- DCJ <ceejay@vnet.ibm.com>  $(date '+%a, %d %b %Y %H:%M:%S +0000')" | sudo tee -a changelog
+echo "" | sudo tee -a changelog
+sudo gzip -9 changelog
 
 echo "Build the actual deb file"
 cd /tmp/

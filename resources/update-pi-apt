@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Copyright 2018 JS Foundation and other contributors, https://js.foundation/
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+sudo apt-get update
+sudo apt-get -q -y install nodejs npm nodered
+nv1=$(npm -v 2>/dev/null)
+nv2=$(npm show npm version 2>/dev/null)
+if [ "$nv1" != "$nv2" ]; then
+    echo -e "Installing npm $nv2. Please wait, this can take a while"
+    sudo npm i -g npm@latest 2>/dev/null
+    hash -r
+    nv3=$(npm -v 2>/dev/null)
+    if [ "$nv3" = "1.4.21" ]; then
+        echo -e "\nFailed to install latest version of npm - rewinding\n"
+        sudo apt-get -y purge npm
+        echo -e "\nnpm uninstalled"
+    else
+        echo -e "\nnpm now version $nv3"
+    fi
+else
+    echo -e "\nnpm now version $nv1"
+fi
