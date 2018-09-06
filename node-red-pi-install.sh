@@ -39,7 +39,7 @@ echo "   Node" $(node -v)
 echo "   Npm   "$(npm -v)
 echo "Now installing Node-RED - please wait - can take 25 mins on a Pi 1"
 echo "   Node-RED "$(npm show node-red version)
-sudo npm i -g --unsafe-perm --no-progress node-red
+sudo npm i -g --unsafe-perm --no-progress --production node-red
 
 # Remove existing serialport
 sudo rm -rf /usr/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.19.2
+VER=0.19.3
 
 cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
@@ -101,12 +101,15 @@ sudo find . -type f -iname "*.js" -exec chmod 644 {} \;
 sudo find . -iname "*.json" -exec chmod 644 {} \;
 sudo find . -iname "*.yml" -exec chmod 644 {} \;
 sudo find . -iname "*.md" -exec chmod 644 {} \;
-sudo find . -iname LICENSE -exec chmod 644 {} \;
+sudo find . -iname "*.html" -exec chmod 644 {} \;
+sudo find . -iname LICENSE* -exec chmod 644 {} \;
 sudo find . -iname Makefile -exec chmod 644 {} \;
 sudo find . -iname *.png -exec chmod 644 {} \;
 sudo find . -iname *.txt -exec chmod 644 {} \;
 sudo find . -iname *.conf -exec chmod 644 {} \;
 sudo find . -iname *.pem -exec chmod 644 {} \;
+sudo find . -iname *.cpp -exec chmod 644 {} \;
+sudo find . -iname *.h -exec chmod 644 {} \;
 sudo find . -iname prepublish.sh -exec chmod 644 {} \;
 sudo find . -iname update_authors.sh -exec chmod 644 {} \;
 sudo find . -type d -exec chmod 755 {} \;
