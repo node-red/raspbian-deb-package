@@ -122,7 +122,7 @@ case $yn in
         # remove any old node-red installs or files
         sudo apt-get remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         # sudo apt-get remove -y node-red-update 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/lib/node_modules/npm /usr/local/bin/node-red* /usr/local/bin/node /usr/local/bin/npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
 
@@ -273,15 +273,19 @@ case $yn in
         sudo systemctl daemon-reload 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne "  Update systemd script               $CHAR\r\n"
 
-        # on Pi, add launcher to top bar, add cpu temp example, make sure ping works, refresh desktop menu
-        if sudo grep -q BCM2 /proc/cpuinfo; then
-            file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
+        # on LXDE add launcher to top bar, refresh desktop menu
+        file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
+        if [ -e $file ]; then
             if ! grep "Node-RED" $file; then
                 match='lxterminal.desktop'
                 insert='lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop'
                 sudo sed -i "s|$match|$insert|" $file 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             fi
-            export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        fi
+
+        # on Pi, add launcher to top bar, add cpu temp example, make sure ping works, refresh desktop menu
+        if sudo grep -q BCM2 /proc/cpuinfo; then
             sudo curl -sL -o /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw=ep /bin/ping 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
