@@ -157,12 +157,16 @@ case $yn in
             echo -ne "  Update Node.js LTS                  $CHAR"
         else
             # clean out old nodejs stuff
+            npv=$(npm -v 2>/dev/null | head -n 1 | cut -d "." -f1)
             sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -rf /opt/nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -f /usr/local/bin/node* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo rm -f /usr/local/bin/npm* /usr/local/bin/npx* /usr/lib/node_modules/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            if [ "$npv" = "1" ]; then
+                sudo rm -rf /usr/local/lib/node_modules/* /usr/lib/node_modules/* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            fi
             sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
             # grab the correct LTS bundle for the processor
