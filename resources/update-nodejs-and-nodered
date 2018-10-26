@@ -14,15 +14,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+echo -ne "\033[2 q"
 if [[ -e /mnt/dietpi_userdata ]]; then
     echo -ne "\n\033[1;32mDiet-Pi\033[0m detected - only going to add the  \033[0;36mnode-red-start, -stop, -log\033[0m  commands.\n"
     echo -ne "Flow files and other things worth backing up can be found in the \033[0;36m/mnt/dietpi_userdata/node-red\033[0m directory.\n\n"
     echo -ne "Use the  \033[0;36mdietpi-software\033[0m  command to un-install and re-install \033[38;5;88mNode-RED\033[0m.\n"
     echo "journalctl -f -n 25 -u node-red -o cat" > /usr/bin/node-red-log
     chmod +x /usr/bin/node-red-log
-    echo "service node-red stop" > /usr/bin/node-red-stop
+    echo "dietpi-services node-red stop" > /usr/bin/node-red-stop
     chmod +x /usr/bin/node-red-stop
-    echo "service node-red start" > /usr/bin/node-red-start
+    echo "dietpi-services node-red start" > /usr/bin/node-red-start
     echo "journalctl -f -n 0 -u node-red -o cat" >> /usr/bin/node-red-start
     chmod +x /usr/bin/node-red-start
 else
@@ -126,6 +127,12 @@ case $yn in
         sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
 
+        nv="v0"
+        nv2="v0.0.0"
+        if [[ -x "$(command -v node)" ]]; then
+            nv=`node -v | cut -d "." -f1`
+            nv2=`node -v`
+        fi
         # maybe remove Node.js - or upgrade if nodesoure.list exists
         if [[ -e $NODERED_HOME/.nvm ]]; then
             echo -ne '  Using NVM to manage Node.js         +   please run   \033[0;36mnvm use lts/*\033[0m   before running ./node-red\r\n'
@@ -141,56 +148,66 @@ case $yn in
             echo -ne "  Using N to manage Node.js           +\r\n"
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update Node.js LTS                  $CHAR"
-        elif [ -e /etc/apt/sources.list.d/nodesource.list ]; then
-            nv=`node -v | cut -d "." -f1`
-            nv2=`node -v`
-            if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv2" = "v8.11.1" ]; then
-                sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
-                if curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            else
-                CHAR="-"
-            fi
-            echo -ne "  Remove old version of Node.js       $CHAR\r\n"
-            echo -ne "  Update Node.js LTS                  \r"
-            if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            echo -ne "  Update Node.js LTS                  $CHAR"
-        else
-            # clean out old nodejs stuff
-            npv=$(npm -v 2>/dev/null | head -n 1 | cut -d "." -f1)
-            sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            sudo rm -rf /opt/nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            sudo rm -f /usr/local/bin/node* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            sudo rm -f /usr/local/bin/npm* /usr/local/bin/npx* /usr/lib/node_modules/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            if [ "$npv" = "1" ]; then
-                sudo rm -rf /usr/local/lib/node_modules/* /usr/lib/node_modules/* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            fi
-            sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-            echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
-            # grab the correct LTS bundle for the processor
-            if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
-                echo -ne "  Install Node.js for Armv6           \r"
-                f=$(curl -sL https://nodejs.org/download/release/latest-carbon/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
-                curl -sL -o node.tgz https://nodejs.org/download/release/latest-carbon/$f 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                # unpack it into the correct places
-                hd=$(head -c 9 node.tgz)
-                if [ "$hd" == "<!DOCTYPE" ]; then
-                    CHAR="$CROSS File $f not downloaded";
+        elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv2" = "v8.11.1" ]; then
+            if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
+                if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv2" = "v8.11.1" ]; then
+                    sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
+                    if curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 else
-                    if sudo tar -zxf node.tgz --strip-components=1 -C /usr 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    CHAR="-"
                 fi
-                # remove the tgz file to save space
-                rm node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                echo -ne "  Install Node.js for Armv6           $CHAR"
-            else
-                echo -ne "  Install Node.js LTS                 \r"
-                # use the official script to install for other debian platforms
-                curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                echo -ne "  Remove old version of Node.js       $CHAR\r\n"
+                echo -ne "  Update Node.js LTS                  \r"
                 if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-                echo -ne "  Install Node.js LTS                 $CHAR"
+                echo -ne "  Update Node.js LTS                  $CHAR"
+            else
+                # clean out old nodejs stuff
+                npv=$(npm -v 2>/dev/null | head -n 1 | cut -d "." -f1)
+                sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo rm -rf /opt/nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo rm -f /usr/local/bin/node* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo rm -f /usr/local/bin/npm* /usr/local/bin/npx* /usr/lib/node_modules/npm* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                if [ "$npv" = "1" ]; then
+                    sudo rm -rf /usr/local/lib/node_modules/* /usr/lib/node_modules/* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                fi
+                sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
+                # grab the correct LTS bundle for the processor
+                if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
+                    echo -ne "  Install Node.js for Armv6           \r"
+                    f=$(curl -sL https://nodejs.org/download/release/latest-carbon/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
+                    curl -sL -o node.tgz https://nodejs.org/download/release/latest-carbon/$f 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    # unpack it into the correct places
+                    hd=$(head -c 9 node.tgz)
+                    if [ "$hd" == "<!DOCTYPE" ]; then
+                        CHAR="$CROSS File $f not downloaded";
+                    else
+                        if sudo tar -zxf node.tgz --strip-components=1 -C /usr 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    fi
+                    # remove the tgz file to save space
+                    rm node.tgz 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    echo -ne "  Install Node.js for Armv6           $CHAR"
+                elif [[ $(lsb_release -d) == *"18.10"* ]]; then
+                    echo -ne "  Apt install Node.js                 \r"
+                    if sudo apt-get install -y nodejs npm curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    echo -ne "  Apt install Node.js                 $CHAR"
+                else
+                    echo -ne "  Install Node.js LTS                 \r"
+                    # use the official script to install for other debian platforms
+                    sudo apt-get install -y curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    echo -ne "  Install Node.js LTS                 $CHAR"
+                fi
+                sudo npm i -g npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null;
             fi
+        else
+            CHAR="-"
+            echo -ne "  Remove old version of Node.js       $CHAR\n"
+            echo -ne "  Leave existing Node.js              $CHAR"
         fi
         hash -r
         rc=""
@@ -282,8 +299,8 @@ case $yn in
         file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
         if [ -e $file ]; then
             if ! grep "Node-RED" $file; then
-                match='lxterminal.desktop'
-                insert='lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop'
+                match="lxterminal.desktop"
+                insert="lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop"
                 sudo sed -i "s|$match|$insert|" $file 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             fi
