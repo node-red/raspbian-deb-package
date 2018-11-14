@@ -15,7 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VER=0.19.4
+echo ""
+VER=$(node-red -? | grep RED | cut -d "v" -f 2)
+echo "NODE_RED VERSION is "$VER
 
 cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
@@ -168,9 +170,12 @@ echo " "
 ls -lrt no*.deb
 
 echo "Move .deb to /home/pi directory"
-sudo mv nodered_$VER.deb /home/pi/
-cd /home/pi
+mkdir -p /home/pi/dist
+sudo mv nodered_$VER.deb /home/pi/dist
+cd /home/pi/dist
 sudo chown pi:pi nodered_$VER.deb
+dpkg-scanpackages -m . | gzip -9c > Packages.gz
+cd ..
 echo " "
 echo "Now running lintian report"
 lintian nodered_$VER.deb > /home/pi/lint.log
