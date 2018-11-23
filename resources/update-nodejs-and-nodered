@@ -21,9 +21,9 @@ if [[ -e /mnt/dietpi_userdata ]]; then
     echo -ne "Use the  \033[0;36mdietpi-software\033[0m  command to un-install and re-install \033[38;5;88mNode-RED\033[0m.\n"
     echo "journalctl -f -n 25 -u node-red -o cat" > /usr/bin/node-red-log
     chmod +x /usr/bin/node-red-log
-    echo "dietpi-services node-red stop" > /usr/bin/node-red-stop
+    echo "dietpi-services stop node-red" > /usr/bin/node-red-stop
     chmod +x /usr/bin/node-red-stop
-    echo "dietpi-services node-red start" > /usr/bin/node-red-start
+    echo "dietpi-services start node-red" > /usr/bin/node-red-start
     echo "journalctl -f -n 0 -u node-red -o cat" >> /usr/bin/node-red-start
     chmod +x /usr/bin/node-red-start
 else
@@ -45,8 +45,8 @@ wget -q --spider https://www.npmjs.com/package/node-red
 if  [ $? -eq 0 ]; then
 echo -e '\033]2;'Node-RED update'\007'
 echo " "
-echo "This script will remove versions of Node.js prior to version 6.x, and Node-RED and"
-echo "if necessary replace them with Node.js 8.x LTS (carbon) and the latest Node-RED from Npm."
+echo "This script will remove versions of Node.js prior to version 7.x, and Node-RED and"
+echo "if necessary replace them with Node.js 10.x LTS (dubnium) and the latest Node-RED from Npm."
 echo " "
 echo "It also moves any Node-RED nodes that are globally installed into your user"
 echo "~/.node-red/node_modules directory, and adds them to your package.json, so that"
@@ -104,9 +104,8 @@ case $yn in
         echo -ne '  Move global nodes to local          \r\n'
         echo -ne '  Install extra Pi nodes              \r\n'
         echo -ne '  Npm rebuild existing nodes          \r\n'
-        echo -ne '  Add menu shortcut                   \r\n'
+        echo -ne '  Add shortcut commands               \r\n'
         echo -ne '  Update systemd script               \r\n'
-        # echo -ne '  Update update script                \r\n'
         echo -ne '                                      \r\n'
         echo -ne '\r\nAny errors will be logged to   /var/log/nodered-install.log\r\n'
         echo -ne '\033[14A'
@@ -148,12 +147,12 @@ case $yn in
             echo -ne "  Using N to manage Node.js           +\r\n"
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update Node.js LTS                  $CHAR"
-        elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv2" = "v8.11.1" ]; then
+        elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv" = "v9" ] || [ "$nv2" = "v8.11.1" ]; then
             if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
-                if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv2" = "v8.11.1" ]; then
+                if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] ||[ "$nv" = "v9" ] || [ "$nv2" = "v8.11.1" ]; then
                     sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
-                    if curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    if curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 else
                     CHAR="-"
                 fi
@@ -178,8 +177,8 @@ case $yn in
                 # grab the correct LTS bundle for the processor
                 if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
                     echo -ne "  Install Node.js for Armv6           \r"
-                    f=$(curl -sL https://nodejs.org/download/release/latest-carbon/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
-                    curl -sL -o node.tgz https://nodejs.org/download/release/latest-carbon/$f 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    f=$(curl -sL https://nodejs.org/download/release/latest-dubnium/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
+                    curl -sL -o node.tgz https://nodejs.org/download/release/latest-dubnium/$f 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     # unpack it into the correct places
                     hd=$(head -c 9 node.tgz)
                     if [ "$hd" == "<!DOCTYPE" ]; then
@@ -198,7 +197,7 @@ case $yn in
                     echo -ne "  Install Node.js LTS                 \r"
                     # use the official script to install for other debian platforms
                     sudo apt-get install -y curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                     echo -ne "  Install Node.js LTS                 $CHAR"
                 fi
@@ -209,6 +208,7 @@ case $yn in
             echo -ne "  Remove old version of Node.js       $CHAR\n"
             echo -ne "  Leave existing Node.js              $CHAR"
         fi
+        NUPG=$CHAR
         hash -r
         rc=""
         if nov=$(node -v 2>/dev/null); then :; else rc="ERR"; fi
@@ -221,12 +221,14 @@ case $yn in
         fi
 
         # clean up the npm cache and node-gyp
-        if [[ $GLOBAL == "true" ]]; then
-            sudo npm cache clean --force 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        else
-            npm cache clean --force 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        if [[ $NUPG == $TICK ]]; then
+            if [[ $GLOBAL == "true" ]]; then
+                sudo npm cache clean --force 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            else
+                npm cache clean --force 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            fi
+            if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         fi
-        if sudo rm -rf "$NODERED_HOME/.node-gyp" "$NODERED_HOME/.npm" /root/.node-gyp /root/.npm; then CHAR=$TICK; else CHAR=$CROSS; fi
         echo -ne "  Clean npm cache                     $CHAR\r\n"
 
         # and install Node-RED
@@ -265,8 +267,12 @@ case $yn in
             echo -ne "  Install extra Pi nodes              $CHAR\r\n"
 
             # try to rebuild any already installed nodes
-            if npm rebuild  2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
-            echo -ne "  Npm rebuild existing nodes          $CHAR\r\n"
+            if [[ $NUPG == $TICK ]]; then
+                if npm rebuild  2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                echo -ne "  Npm rebuild existing nodes          $CHAR\r\n"
+            else
+                echo -ne "  Npm rebuild existing nodes          -\r\n"
+            fi
         popd 2>&1 >>/dev/null
 
         # add the shortcut and start/stop/log scripts to the menu
@@ -283,9 +289,9 @@ case $yn in
             sudo chmod +x /usr/bin/node-red-start
             sudo chmod +x /usr/bin/node-red-stop
             sudo chmod +x /usr/bin/node-red-log
-            echo -ne "  Add menu shortcut                   $TICK\r\n"
+            echo -ne "  Add shortcut commands               $TICK\r\n"
         else
-            echo -ne "  Add menu shortcut                   $CROSS\r\n"
+            echo -ne "  Add shortcut commands               $CROSS\r\n"
         fi
 
         # add systemd script and configure it for $USER
@@ -298,15 +304,17 @@ case $yn in
         # on LXDE add launcher to top bar, refresh desktop menu
         file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
         if [ -e $file ]; then
-            if ! grep "Node-RED" $file; then
-                match="lxterminal.desktop"
-                insert="lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop"
-                sudo sed -i "s|$match|$insert|" $file 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            if ! grep -q "Node-RED" $file; then
+                mat="lxterminal.desktop"
+                ins="lxterminal.desktop\n    }\n    Button {\n      id=Node-RED.desktop"
+                sudo sed -i "s|$mat|$ins|" $file 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                if xhost >& /dev/null ; then
+                    export DISPLAY=:0 && lxpanelctl restart 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                fi
             fi
         fi
 
-        # on Pi, add launcher to top bar, add cpu temp example, make sure ping works, refresh desktop menu
+        # on Pi, add launcher to top bar, add cpu temp example, make sure ping works
         if sudo grep -q BCM2 /proc/cpuinfo; then
             sudo curl -sL -o /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/Pi\ cpu\ temperature.json https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/Pi%20cpu%20temperature.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo setcap cap_net_raw+eip $(eval readlink -f `which node`) 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
@@ -317,7 +325,6 @@ case $yn in
         # Finally update the update script
         if sudo curl -sL -o /tmp/update-nodejs-and-nodered https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/update-pi 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
         sudo chmod +x /tmp/update-nodejs-and-nodered
-        # echo -ne "  Update update script                $CHAR\r\n"
         echo -ne "                                           \r\n"
 
         echo -ne "\r\n\r\n\r\n"
