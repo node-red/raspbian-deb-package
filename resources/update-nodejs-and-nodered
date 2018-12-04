@@ -288,6 +288,7 @@ case $yn in
             sudo curl -sL -o /etc/logrotate.d/nodered https://raw.githubusercontent.com/node-red/raspbian-deb-package/master/resources/nodered.rotate 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
             sudo chmod +x /usr/bin/node-red-start
             sudo chmod +x /usr/bin/node-red-stop
+            sudo chmod +x /usr/bin/node-red-restart
             sudo chmod +x /usr/bin/node-red-log
             echo -ne "  Add shortcut commands               $TICK\r\n"
         else
