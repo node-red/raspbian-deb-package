@@ -132,6 +132,8 @@ case $yn in
             nv=`node -v | cut -d "." -f1`
             nv2=`node -v`
         fi
+        # ensure ~/.config dir is owned by the user
+        sudo chown -Rf $NODERED_USER:$NODERED_GROUP $NODERED_HOME/.config/
         # maybe remove Node.js - or upgrade if nodesoure.list exists
         if [[ -e $NODERED_HOME/.nvm ]]; then
             echo -ne '  Using NVM to manage Node.js         +   please run   \033[0;36mnvm use lts/*\033[0m   before running ./node-red\r\n'
