@@ -246,6 +246,7 @@ case $yn in
         mkdir -p "$NODERED_HOME/.node-red/node_modules"
         sudo chown -R $NODERED_USER:$NODERED_GROUP $NODERED_HOME/.node-red/ 2>&1 >>/dev/null
         pushd "$NODERED_HOME/.node-red" 2>&1 >>/dev/null
+            npm config set update-notifier false 2>&1 >>/dev/null
             if [ ! -f "package.json" ]; then
                 echo '{' > package.json
                 echo '  "name": "node-red-project",' >> package.json
@@ -304,6 +305,8 @@ case $yn in
         sudo systemctl daemon-reload 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne "  Update systemd script               $CHAR\r\n"
 
+        # remove unneeded large sentiment library to save space and load time 
+        sudo rm -f /usr/lib/node_modules/node-red/node_modules/multilang-sentiment/build/output/build-all.json 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         # on LXDE add launcher to top bar, refresh desktop menu
         file=/home/$NODERED_USER/.config/lxpanel/LXDE-pi/panels/panel
         if [ -e $file ]; then

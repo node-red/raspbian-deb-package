@@ -58,6 +58,7 @@ sudo find . -iname test* -exec rm -r {} \;
 sudo find . -type f -iname usage.txt -exec rm {} \;
 sudo find . -type f -iname example.js -exec rm {} \;
 sudo find . -type d -name node-pre-gyp-github -exec rm -r {} \;
+sudo find . -type f -iname build-all.json -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
 cd /usr/lib/node_modules/node-red-node-serialport/node_modules
