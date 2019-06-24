@@ -17,24 +17,24 @@
 echo -e '\033]2;'Node-RED console'\007'
 if [[ $(which node-red) ]]; then
     if [[ ! $(which npm) ]]; then
-        echo -e "\033[0;47m                                                  \033[0m"
-        echo -e "\033[0;47m    npm is not installed, it is recommended       \033[0m"
-        echo -e "\033[0;47m    to install the latest by running:             \033[0m"
-        echo -e "\033[0;47m        update-nodejs-and-nodered                 \033[0m"
-        echo -e "\033[0;47m                                                  \033[0m"
+        echo -e "\033[0m                                                  \033[0m"
+        echo -e "\033[0m    npm is not installed, it is recommended       \033[0m"
+        echo -e "\033[0m    to install the latest by running:             \033[0m"
+        echo -e "\033[0m        update-nodejs-and-nodered                 \033[0m"
+        echo -e "\033[0m                                                  \033[0m"
         echo -e " "
     fi
     if [[ $(which node) ]]; then
         nv=`node -v | cut -d "." -f1`
         # if [ "$nv" = "v0" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ]; then
         if [ "$nv" = "v0" ]; then
-            echo -e "\033[0;47m                                                  \033[0m"
-            echo -e "\033[0;47m    node.js $nv.x is NO LONGER supported.          \033[0m"
-            echo -e "\033[0;47m    please consider upgrading to node.js LTS.     \033[0m"
-            echo -e "\033[0;47m                                                  \033[0m"
-            echo -e "\033[0;47m    you can do this with the following command:   \033[0m"
-            echo -e "\033[0;47m        update-nodejs-and-nodered                 \033[0m"
-            echo -e "\033[0;47m                                                  \033[0m"
+            echo -e "\033[0m                                                  \033[0m"
+            echo -e "\033[0m    node.js $nv.x is NO LONGER supported.          \033[0m"
+            echo -e "\033[0m    please consider upgrading to node.js LTS.     \033[0m"
+            echo -e "\033[0m                                                  \033[0m"
+            echo -e "\033[0m    you can do this with the following command:   \033[0m"
+            echo -e "\033[0m        update-nodejs-and-nodered                 \033[0m"
+            echo -e "\033[0m                                                  \033[0m"
             echo -e " "
         fi
         HOSTIP=`hostname -I | cut -d ' ' -f 1`
