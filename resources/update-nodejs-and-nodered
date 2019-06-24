@@ -277,6 +277,7 @@ case $yn in
                 echo -ne "  Npm rebuild existing nodes          -\r\n"
             fi
         popd 2>&1 >>/dev/null
+        sudo chown -Rf $NODERED_USER:$NODERED_GROUP $NODERED_HOME/.npm 2>&1 >>/dev/null
 
         # add the shortcut and start/stop/log scripts to the menu
         sudo mkdir -p /usr/bin
