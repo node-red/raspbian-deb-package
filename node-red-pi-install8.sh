@@ -19,7 +19,7 @@
 sudo apt-get update
 sudo rm -rf /usr/local/lib/node_modules/
 sudo rm -rf /usr/local/bin/node-red*
-sudo rm -rf /usr/lib/node_modules/
+sudo rm -rf /usr/local/lib/node_modules/
 sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /usr/bin/update-nodejs-and-nodered
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
@@ -44,10 +44,10 @@ echo "   Node-RED "$(npm show node-red version)
 sudo npm i -g --unsafe-perm --no-progress --production node-red
 
 # Remove existing serialport
-sudo rm -rf /usr/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport
+sudo rm -rf /usr/local/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
-pushd /usr/lib/node_modules/node-red/node_modules
+pushd /usr/local/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -81,7 +81,7 @@ sudo npm install -g --unsafe-perm --no-progress node-red-contrib-ibm-watson-iot 
 # sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 
 match='editorTheme: {'
-file='/usr/lib/node_modules/node-red/settings.js'
+file='/usr/local/lib/node_modules/node-red/settings.js'
 insert='editorTheme: {\n        menu: { \"menu-item-help\": {\n            label: \"Node-RED Pi Website\",\n            url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n        } },'
 sudo sed -i "s|$match|$insert|" $file
 echo "*********************"
@@ -101,8 +101,8 @@ if [ -d "resources" ]; then
     sudo cp node-red-icon.svg /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop
-    sudo cp Pi\ cpu\ temperature.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
-    sudo cp cpu\ load.json /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
+    sudo cp Pi\ cpu\ temperature.json /usr/local/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
+    sudo cp cpu\ load.json /usr/local/lib/node_modules/node-red-contrib-ibm-watson-iot/examples/
     sudo chown pi:pi *
     cd ..
 else

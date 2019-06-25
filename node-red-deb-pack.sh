@@ -19,17 +19,17 @@ echo ""
 VER=$(node-red -? | grep RED | cut -d "v" -f 2)
 echo "NODE_RED VERSION is "$VER
 
-cd /usr/lib/node_modules
+cd /usr/local/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
 sudo find . -not -newermt 1971-01-01 -exec touch {} \;
 
-cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
+cd /usr/local/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;
 
-cd /usr/lib/node_modules/node-red/node_modules
+cd /usr/local/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -61,7 +61,7 @@ sudo find . -type d -name node-pre-gyp-github -exec rm -r {} \;
 sudo find . -type f -iname build-all.json -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
-cd /usr/lib/node_modules/node-red-node-serialport/node_modules
+cd /usr/local/lib/node_modules/node-red-node-serialport/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;
@@ -83,7 +83,7 @@ sudo find . -type f -iname "*~" -exec rm {} \;
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
-sudo tar zcf /tmp/nred.tgz /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nred.tgz
 echo " "
@@ -149,8 +149,8 @@ echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee preinst
 # echo "npm i -g npm@latest >/dev/null 2>&1; exit 0" | sudo tee postinst
 echo "hash -r >/dev/null 2>&1; exit 0" | sudo tee postinst
 echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee prerm
-echo "rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
-# echo "rm -rf /usr/lib/node_modules/npm /usr/local/bin/npm && hash -r >/dev/null 2>&1; exit 0" | sudo tee postrm
+echo "rm -rf /usr/local/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
+# echo "rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm && hash -r >/dev/null 2>&1; exit 0" | sudo tee postrm
 echo "export DISPLAY=:0 && lxpanelctl restart >/dev/null 2>&1; exit 0" | sudo tee postrm
 sudo chmod 0755 preinst postinst prerm postrm
 
