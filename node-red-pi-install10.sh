@@ -16,16 +16,18 @@
 # limitations under the License.
 
 # can remove next line if already updated....
-#sudo apt-get update
-sudo rm -rf /usr/local/lib/node_modules/
-sudo rm -rf /usr/local/bin/node-red*
+sudo apt-get update
 sudo rm -rf /usr/lib/node_modules/
 sudo rm -rf /usr/bin/node-red*
 sudo rm -rf /usr/bin/update-nodejs-and-nodered
+sudo rm -rf /usr/local/lib/node_modules/
+sudo rm -rf /usr/local/bin/node-red*
+sudo rm -rf /usr/local/bin/update-nodejs-and-nodered
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo rm -rf /root/.npm /root/.node-gyp
 
 # sudo apt-get install nodejs nodejs-legacy npm lintian
+
 sudo apt-get install -y build-essential nodejs npm lintian
 sudo npm install -g --unsafe-perm npm@latest
 # Get node.js 4.8.2 to match stretch ... for now
@@ -43,10 +45,10 @@ echo "   Node-RED "$(npm show node-red version)
 sudo npm i -g --unsafe-perm --no-progress --production node-red
 
 # Remove existing serialport
-sudo rm -rf /usr/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport
+sudo rm -rf /usr/local/lib/node_modules/node-red/nodes/node_modules/node-red-node-serialport
 
 # Remove a load of unnecessary doc/test/example from pre-reqs
-pushd /usr/lib/node_modules/node-red/node_modules
+pushd /usr/local/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -54,7 +56,6 @@ sudo find . -type d -name sample -exec rm -r {} \;
 sudo find . -type d -iname benchmark* -exec rm -r {} \;
 sudo find . -type d -iname .nyc_output -exec rm -r {} \;
 sudo find . -type d -iname unpacked -exec rm -r {} \;
-sudo find . -type d -iname demo -exec rm -r {} \;
 
 sudo find . -name bench.gnu -type f -exec rm {} \;
 sudo find . -name .npmignore -type f -exec rm {} \;
@@ -76,15 +77,20 @@ popd
 mkdir -p ~/.node-red
 #sudo npm install -g --unsafe-perm --no-progress node-red-admin
 echo "Node-RED installed. Adding a few extra nodes"
-sudo npm install -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-node-ledborg node-red-contrib-play-audio node-red-node-serialport
+sudo npm install -g --unsafe-perm --no-progress node-red-node-random node-red-node-ping node-red-node-smooth node-red-contrib-play-audio node-red-node-serialport
 sudo npm install -g --unsafe-perm --no-progress node-red-contrib-ibm-watson-iot node-red-node-pi-sense-hat
 # sudo setcap cap_net_raw+eip $(eval readlink -f `which node`)
 
 match='editorTheme: {'
-file='/usr/lib/node_modules/node-red/settings.js'
+file='/usr/local/lib/node_modules/node-red/settings.js'
 insert='editorTheme: {\n        menu: { \"menu-item-help\": {\n            label: \"Node-RED Pi Website\",\n            url: \"http:\/\/nodered.org\/docs\/hardware\/raspberrypi.html\"\n        } },'
 sudo sed -i "s|$match|$insert|" $file
 echo "*********************"
+
+echo "Move everything under /usr rather than /usr/local"
+sudo mkdir -p /usr/lib/node_modules
+sudo mv /usr/local/lib/node_modules/node-red* /usr/lib/node_modules/
+sudo mv /usr/local/bin/node* /usr/bin/
 
 # Get systemd script - start and stop scripts - svg icon - and .desktop file into correct places.
 if [ -d "resources" ]; then
@@ -92,12 +98,12 @@ if [ -d "resources" ]; then
     sudo chown root:root *
     sudo chmod +x node-red-st*
     sudo chmod +x node-red-log
-    sudo chmod +x update-pi
+    sudo chmod +x update-pi-apt
     sudo cp nodered.service /lib/systemd/system/
     sudo cp node-red-start /usr/bin/
     sudo cp node-red-stop /usr/bin/
     sudo cp node-red-log /usr/bin/
-    sudo cp update-pi /usr/bin/update-nodejs-and-nodered
+    sudo cp update-pi-apt /usr/bin/update-nodejs-and-nodered
     sudo cp node-red-icon.svg /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo chmod 644 /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
     sudo cp Node-RED.desktop /usr/share/applications/Node-RED.desktop

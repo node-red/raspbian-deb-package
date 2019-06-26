@@ -19,17 +19,21 @@ echo ""
 VER=$(node-red -? | grep RED | cut -d "v" -f 2)
 echo "NODE_RED VERSION is "$VER
 
-cd /usr/local/lib/node_modules
+cd /usr/lib/node_modules
 sudo find . -type f -name .DS_Store -exec rm {} \;
+sudo find . -type f -name .npmignore -exec rm {} \;
+sudo find . -type f -name .eslintrc* -exec rm {} \;
+sudo find . -type f -name .editorconfig -exec rm {} \;
+sudo find . -type f -name *.swp -exec rm {} \;
 sudo find . -not -newermt 1971-01-01 -exec touch {} \;
 
-cd /usr/local/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
+cd /usr/lib/node_modules/node-red-contrib-ibm-watson-iot/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;
 
-cd /usr/local/lib/node_modules/node-red/node_modules
+cd /usr/lib/node_modules/node-red/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name example* -exec rm -r {} \;
@@ -39,6 +43,7 @@ sudo find . -type d -iname .nyc_output -exec rm -r {} \;
 sudo find . -type d -iname unpacked -exec rm -r {} \;
 sudo find . -type d -name man* -exec rm -r {} \;
 sudo find . -type d -name tst -exec rm -r {} \;
+sudo find . -type d -iname demo -exec rm -r {} \;
 
 sudo find . -type f -name bench.gnu -exec rm {} \;
 sudo find . -type f -name .npmignore -exec rm {} \;
@@ -61,7 +66,7 @@ sudo find . -type d -name node-pre-gyp-github -exec rm -r {} \;
 sudo find . -type f -iname build-all.json -exec rm -r {} \;
 #sudo find . -iname LICENSE* -type f -exec rm {} \;
 
-cd /usr/local/lib/node_modules/node-red-node-serialport/node_modules
+cd /usr/lib/node_modules/node-red-node-serialport/node_modules
 sudo find . -type d -name test -exec rm -r {} \;
 sudo find . -type d -name doc -exec rm -r {} \;
 sudo find . -type d -name sample -exec rm -r {} \;
@@ -83,7 +88,7 @@ sudo find . -type f -iname "*~" -exec rm {} \;
 echo "Tar up the existing install"
 sudo rm -rf /tmp/n*
 cd /
-sudo tar zcf /tmp/nred.tgz /usr/local/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
+sudo tar zcf /tmp/nred.tgz /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/bin/update-nodejs-and-nodered /usr/share/applications/Node-RED.desktop /lib/systemd/system/nodered.service /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg
 echo " "
 ls -l /tmp/nred.tgz
 echo " "
@@ -93,9 +98,9 @@ sudo mkdir -p /tmp/nodered_$VER/DEBIAN
 sudo tar zxf /tmp/nred.tgz -C /tmp/nodered_$VER
 cd /tmp/nodered_$VER
 
-#echo "Move from /usr/local/... to /usr/..."
-#sudo mv usr/local/* usr/
-#sudo rm -rf usr/local
+# echo "Move from /usr/local/... to /usr/..."
+# sudo mv usr/local/* usr/
+# sudo rm -rf usr/local
 
 echo "Reset file ownerships and permissions"
 sudo chown -R root:root *
@@ -132,7 +137,8 @@ echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
 echo "Installed-Size: $SIZE" | sudo tee -a control
-echo "Depends: nodejs (>= 8), python (>= 2.7)" | sudo tee -a control
+# echo "Depends: nodejs (>= 8), python (>= 2.7)" | sudo tee -a control
+echo "Depends: nodejs (>= 10), npm (>= 5.8), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control
@@ -149,7 +155,7 @@ echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee preinst
 # echo "npm i -g npm@latest >/dev/null 2>&1; exit 0" | sudo tee postinst
 echo "hash -r >/dev/null 2>&1; exit 0" | sudo tee postinst
 echo "service nodered stop >/dev/null 2>&1; exit 0" | sudo tee prerm
-echo "rm -rf /usr/local/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
+echo "rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* /usr/share/applications/Node-RED.desktop /usr/share/icons/hicolor/scalable/apps/node-red-icon.svg >/dev/null 2>&1; exit 0" | sudo tee postrm
 # echo "rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm && hash -r >/dev/null 2>&1; exit 0" | sudo tee postrm
 echo "export DISPLAY=:0 && lxpanelctl restart >/dev/null 2>&1; exit 0" | sudo tee postrm
 sudo chmod 0755 preinst postinst prerm postrm
@@ -176,10 +182,10 @@ sudo mv nodered_$VER.deb /home/pi/dist
 cd /home/pi/dist
 sudo chown pi:pi nodered_$VER.deb
 dpkg-scanpackages -m . | gzip -9c > Packages.gz
-cd ..
 echo " "
 echo "Now running lintian report"
 lintian nodered_$VER.deb > /home/pi/lint.log
+cd ..
 echo ' '
 echo 'Errors   ' $(cat lint.log | grep E: | wc -l)
 echo 'Warnings ' $(cat lint.log | grep W: | wc -l)

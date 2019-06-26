@@ -127,10 +127,10 @@ case $yn in
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
 
         nv="v0"
-        nv2="v0.0.0"
+        nv2=""
         if [[ -x "$(command -v node)" ]]; then
             nv=`node -v | cut -d "." -f1`
-            nv2=`node -v`
+            nv2=`apt list nodejs 2>/dev/null | grep dfsg | cut -d '~' -f 2 | cut -d '-' -f 1`
         fi
         # ensure ~/.config dir is owned by the user
         sudo chown -Rf $NODERED_USER:$NODERED_GROUP $NODERED_HOME/.config/
@@ -149,9 +149,9 @@ case $yn in
             echo -ne "  Using N to manage Node.js           +\r\n"
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update Node.js LTS                  $CHAR"
-        elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv" = "v9" ] || [ "$nv2" = "v8.11.1" ] || [ "$nv2" = "v10.15.2" ]; then
+        elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
             if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
-                if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] ||[ "$nv" = "v9" ] || [ "$nv2" = "v8.11.1" ] || [ "$nv2" = "v10.15.2" ]; then
+                if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] ||[ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
                     sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
                     if curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
