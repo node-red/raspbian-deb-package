@@ -16,7 +16,7 @@
 # limitations under the License.
 
 echo ""
-VER=$(node-red -? | grep RED | cut -d "v" -f 2)
+VER=$(node-red -? | grep RED | cut -d "v" -f 2)-0
 echo "NODE_RED VERSION is "$VER
 
 cd /usr/lib/node_modules
@@ -137,8 +137,8 @@ echo "Section: editors" | sudo tee -a control
 echo "Priority: optional" | sudo tee -a control
 echo "Architecture: armhf" | sudo tee -a control
 echo "Installed-Size: $SIZE" | sudo tee -a control
-# echo "Depends: nodejs (>= 8), python (>= 2.7)" | sudo tee -a control
-echo "Depends: nodejs (>= 10), npm (>= 5.8), python (>= 2.7)" | sudo tee -a control
+echo "Depends: nodejs (>= 8), python (>= 2.7)" | sudo tee -a control
+#echo "Depends: nodejs (>= 10), npm (>= 5.8), python (>= 2.7)" | sudo tee -a control
 echo "Homepage: http://nodered.org" | sudo tee -a control
 echo "Maintainer: Dave Conway-Jones <dceejay@gmail.com>" | sudo tee -a control
 echo "Description: Node-RED flow editor for the Internet of Things" | sudo tee -a control

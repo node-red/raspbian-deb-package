@@ -56,6 +56,7 @@ sudo find . -type d -name sample -exec rm -r {} \;
 sudo find . -type d -iname benchmark* -exec rm -r {} \;
 sudo find . -type d -iname .nyc_output -exec rm -r {} \;
 sudo find . -type d -iname unpacked -exec rm -r {} \;
+sudo find . -type d -iname demo -exec rm -r {} \;
 
 sudo find . -name bench.gnu -type f -exec rm {} \;
 sudo find . -name .npmignore -type f -exec rm {} \;
