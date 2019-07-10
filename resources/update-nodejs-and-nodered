@@ -177,6 +177,7 @@ case $yn in
                 sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
                 # grab the correct LTS bundle for the processor
+                sudo apt-get update --allow-releaseinfo-change 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
                     echo -ne "  Install Node.js for Armv6           \r"
                     f=$(curl -sL https://nodejs.org/download/release/latest-dubnium/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
