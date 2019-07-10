@@ -16,7 +16,7 @@
 # limitations under the License.
 
 # can remove next line if already updated....
-#sudo apt-get update
+#sudo apt update -y
 sudo rm -rf /usr/local/lib/node_modules/
 sudo rm -rf /usr/local/bin/node-red*
 sudo rm -rf /usr/lib/node_modules/
@@ -25,8 +25,8 @@ sudo rm -rf /usr/bin/update-nodejs-and-nodered
 sudo rm -rf /home/pi/.npm /home/pi/.node-gyp
 sudo rm -rf /root/.npm /root/.node-gyp
 
-# sudo apt-get install nodejs nodejs-legacy npm lintian
-sudo apt-get install -y build-essential nodejs npm lintian
+# sudo apt install nodejs nodejs-legacy npm lintian
+sudo apt install -y build-essential nodejs npm lintian
 sudo npm install -g --unsafe-perm npm@latest
 # Get node.js 4.8.2 to match stretch ... for now
 #wget https://nodejs.org/download/release/v4.8.2/node-v4.8.2-linux-armv6l.tar.gz -O /tmp/node.tgz

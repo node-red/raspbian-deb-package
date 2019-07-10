@@ -120,8 +120,8 @@ case $yn in
         echo "Found global nodes: $GLOBALNODES :" | sudo tee -a /var/log/nodered-install.log >>/dev/null
 
         # remove any old node-red installs or files
-        sudo apt-get remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-        # sudo apt-get remove -y node-red-update 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        sudo apt remove -y nodered 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+        # sudo apt remove -y node-red-update 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/local/lib/node_modules/node-red* /usr/local/lib/node_modules/npm /usr/local/bin/node-red* /usr/local/bin/node /usr/local/bin/npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         sudo rm -rf /usr/lib/node_modules/node-red* /usr/bin/node-red* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
         echo -ne '  Remove old version of Node-RED      \033[1;32m\u2714\033[0m\r\n'
@@ -152,7 +152,7 @@ case $yn in
         elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
             if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
                 if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] ||[ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
-                    sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    sudo apt remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
                     if curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 else
@@ -160,12 +160,12 @@ case $yn in
                 fi
                 echo -ne "  Remove old version of Node.js       $CHAR\r\n"
                 echo -ne "  Update Node.js LTS                  \r"
-                if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                if sudo apt install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 echo -ne "  Update Node.js LTS                  $CHAR"
             else
                 # clean out old nodejs stuff
                 npv=$(npm -v 2>/dev/null | head -n 1 | cut -d "." -f1)
-                sudo apt-get remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo apt remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo dpkg -r node 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo rm -rf /opt/nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
@@ -174,10 +174,10 @@ case $yn in
                 if [ "$npv" = "1" ]; then
                     sudo rm -rf /usr/local/lib/node_modules/* /usr/lib/node_modules/* 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 fi
-                sudo apt-get autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo apt autoremove -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
                 # grab the correct LTS bundle for the processor
-                sudo apt-get update --allow-releaseinfo-change 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                sudo apt update -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
                     echo -ne "  Install Node.js for Armv6           \r"
                     f=$(curl -sL https://nodejs.org/download/release/latest-dubnium/ | grep "armv6l.tar.gz" | cut -d '"' -f 2)
@@ -194,14 +194,14 @@ case $yn in
                     echo -ne "  Install Node.js for Armv6           $CHAR"
                 elif [[ $(lsb_release -d) == *"18.10"* ]]; then
                     echo -ne "  Apt install Node.js                 \r"
-                    if sudo apt-get install -y nodejs npm curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    if sudo apt install -y nodejs npm curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                     echo -ne "  Apt install Node.js                 $CHAR"
                 else
                     echo -ne "  Install Node.js LTS                 \r"
                     # use the official script to install for other debian platforms
-                    sudo apt-get install -y curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
+                    sudo apt install -y curl 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
-                    if sudo apt-get install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
+                    if sudo apt install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                     echo -ne "  Install Node.js LTS                 $CHAR"
                 fi
                 sudo npm i -g npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null;
