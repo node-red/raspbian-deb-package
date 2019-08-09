@@ -62,7 +62,7 @@ if [[ $(which node-red) ]]; then
         fi
         if groups | grep -q -w sudo; then
               # Current user is member of sudo group, start node-red through systemd
-              sudo service nodered start
+              sudo systemctl start nodered
               echo " "
               echo "Starting as a systemd service."
               sudo journalctl -f -n 0 -u nodered -o cat
