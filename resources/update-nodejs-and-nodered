@@ -138,6 +138,7 @@ case $yn in
         # maybe remove Node.js - or upgrade if nodesoure.list exists
         if [[ -e $NODERED_HOME/.nvm ]]; then
             echo -ne '  Using NVM to manage Node.js         +   please run   \033[0;36mnvm use lts/*\033[0m   before running ./node-red\r\n'
+            echo -ne '  NOTE: Using nvm is NOT RECOMMENDED. Node-RED will not run as a service unde nvm.\r\n'
             export NVM_DIR=$NODERED_HOME/.nvm
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             nvm install --lts/* >/dev/null 2>&1
