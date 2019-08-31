@@ -152,20 +152,24 @@ case $yn in
             if sudo n lts 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
             echo -ne "  Update Node.js LTS                  $CHAR"
         elif [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] || [ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
-            if [ -e /etc/apt/sources.list.d/nodesource.list ]; then
+            echo "Updating nodejs "$nv | sudo tee -a /var/log/nodered-install.log >>/dev/null
+            if [[ -f /etc/apt/sources.list.d/nodesource.list ]]; then
+                echo "Using nodesource.list" | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 if [ "$nv" = "v0" ] || [ "$nv" = "v1" ] || [ "$nv" = "v3" ] || [ "$nv" = "v4" ] || [ "$nv" = "v5" ] || [ "$nv" = "v6" ] || [ "$nv" = "v7" ] ||[ "$nv" = "v9" ] || [ "$nv2" = "dfsg" ]; then
+                    echo "Removing nodejs "$nv | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     sudo apt remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                     sudo rm -rf /etc/apt/sources.d/nodesource.list /usr/lib/node_modules/npm*
                     if curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 else
                     CHAR="-"
                 fi
-                echo -ne "  Remove old version of Node.js       $CHAR\r\n"
+                echo -ne "  Remove old version of Node.js       $CHAR $nv\r\n"
                 echo -ne "  Update Node.js LTS                  \r"
                 if sudo apt install -y nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null; then CHAR=$TICK; else CHAR=$CROSS; fi
                 echo -ne "  Update Node.js LTS                  $CHAR"
             else
                 # clean out old nodejs stuff
+                echo "Not using nodesource.list" | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 npv=$(npm -v 2>/dev/null | head -n 1 | cut -d "." -f1)
                 sudo apt remove -y nodejs nodejs-legacy npm 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo dpkg -r nodejs 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
@@ -178,7 +182,7 @@ case $yn in
                 fi
                 sudo apt -y autoremove 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 echo -ne "  Remove old version of Node.js       \033[1;32m\u2714\033[0m\r\n"
-                # grab the correct LTS bundle for the processor
+                echo "Grab the LTS bundle" | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 sudo apt update -y 2>&1 | sudo tee -a /var/log/nodered-install.log >>/dev/null
                 if cat /proc/cpuinfo | grep model | grep -q ARMv6 ; then
                     echo -ne "  Install Node.js for Armv6           \r"
