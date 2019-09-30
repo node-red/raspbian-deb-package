@@ -1,7 +1,9 @@
 # raspbian-deb-package
 
-Scripts required to build the Node-RED deb package for Raspbian Stretch ONLY,
-as it requires node.js v4.* 
+
+### **NOTE**: This repository is being deprecated in favour of [node-red-/linux-installers](https://github.com/node-red/linux-installers). It will remain here for any existing links to find a home. Please raise any Issues on the new repository.
+
+Scripts required to build the Node-RED deb package for Raspbian Stretch and Buster.
 
 The last version of Node-RED for Jessie was 0.15.3.
 
@@ -39,9 +41,6 @@ menu - programming
 ### node-red-deb-pack.sh
 
 The deb package version number is set at the top of this script. Edit as necessary.
-For example
-
-    VER=0.17.4
 
 Next run this script - it also cleans up the crud just to be sure... then packs
 all the files and unpacks them into a directory in `/tmp/`
